@@ -17,11 +17,11 @@ jobs:
               with:
                   node-version: 16.15.0
 
-            - name: npm install
-              run: npm install
+            - name: npm ci
+              run: npm ci
 
             - name: npm build
-              run: npm build
+              run: npm run build
 
             - name: Upload GitHub Pages artifact
               uses: actions/upload-pages-artifact@v1.0.4
