@@ -1,0 +1,21 @@
+{
+    "name": "ld51",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc && vite build",
+        "preview": "vite preview"
+    },
+    "devDependencies": {
+        "typescript": "^4.6.4",
+        "vite": "^3.1.0",
+        "vite-plugin-comlink": "^3.0.4",
+        "vite-tsconfig-paths": "^3.5.1"
+    },
+    "dependencies": {
+        "buffer-backed-object": "^0.3.1",
+        "comlink": "^4.3.1"
+    }
+}
