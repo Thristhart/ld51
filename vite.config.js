@@ -11,4 +11,5 @@ export default {
     worker: {
         plugins: [comlink()],
     },
+    base: "/ld51/",
 };
