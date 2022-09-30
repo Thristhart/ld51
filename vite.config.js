@@ -1,8 +1,13 @@
+import path from "path";
 import { comlink } from "vite-plugin-comlink";
-import tsconfigPaths from "vite-tsconfig-paths";
 
 export default {
-    plugins: [tsconfigPaths(), comlink()],
+    resolve: {
+        alias: {
+            "~": path.resolve(__dirname, "src"),
+        },
+    },
+    plugins: [comlink()],
     worker: {
         plugins: [comlink()],
     },
