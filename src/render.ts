@@ -10,7 +10,8 @@ let frameHandle: number;
 export const animationFrame = async (_timestamp: number) => {
     const state = await getGameState();
     context.clearRect(0, 0, canvas.width, canvas.height);
-    context.fillText(state.counterValue.toString(), 10, 10);
+    context.font = (state.counterValue + 5).toString() + "pt sans-serif";
+    context.fillText(state.counterValue.toString(), 10, state.counterValue + 10);
 
     frameHandle = requestAnimationFrame(animationFrame);
 };
