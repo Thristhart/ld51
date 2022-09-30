@@ -1,3 +1,4 @@
+import preact from "@preact/preset-vite";
 import path from "path";
 
 export default {
@@ -7,4 +8,5 @@ export default {
         },
     },
     base: "/ld51/",
+    plugins: [preact({ devtoolsInProd: true })],
 };
