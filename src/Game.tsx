@@ -4,7 +4,13 @@ import { useContext, useState } from "preact/hooks";
 import { GizmoGrid } from "~/GizmoGrid";
 import { Timer } from "~/gizmos/Timer";
 
-interface Gizmo extends FunctionComponent {}
+export interface GizmoProps {
+    readonly level: Signal<number>;
+}
+interface Gizmo {
+    readonly Component: FunctionComponent<GizmoProps>;
+    readonly level: Signal<number>;
+}
 
 let lastTick = performance.now();
 let gameTime = signal(0);
@@ -23,7 +29,7 @@ interface GameState {
 }
 const GameStateContext = createContext<GameState | null>(null);
 const GameStateProvider = ({ children }: { children: ComponentChildren }) => {
-    const gizmos = useSignal<Gizmo[]>([Timer]);
+    const gizmos = useSignal<Gizmo[]>([{ Component: Timer, level: signal(5) }]);
 
     return <GameStateContext.Provider value={useState({ gizmos, gameTime })[0]}>{children}</GameStateContext.Provider>;
 };

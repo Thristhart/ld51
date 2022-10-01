@@ -1,0 +1,15 @@
+.buttonGizmo {
+    border-radius: 50%;
+    border: 3px solid black;
+    box-shadow: 0.5em 0.3em 0.5em rgb(1 1 1 / 30%);
+    transition: transform 200ms, box-shadow 200ms, background 200ms;
+    outline: none;
+    background: red;
+
+    color: white;
+    font-size: 3vmin;
+}
+.buttonGizmo:active {
+    box-shadow: 0 0 0.3em rgb(1 1 1 / 30%);
+    transform: translateY(0.3em);
+}
