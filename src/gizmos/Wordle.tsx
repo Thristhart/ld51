@@ -142,11 +142,16 @@ export const Wordle = ({ level }: GizmoProps) => {
         }
         if (hasEnded.value) {
             setTimeout(() => {
-                let result = getRandomAnswer(level);
-                word.value = result.word;
-                guesses.value = [result.possibleMatches[Math.floor(Math.random() * result.possibleMatches.length)]];
-                guess.value = "";
-                hasEnded.value = false;
+                if(level.value <= 5){
+                    let result = getRandomAnswer(level);
+                    word.value = result.word;
+                    guesses.value = [result.possibleMatches[Math.floor(Math.random() * result.possibleMatches.length)]];
+                    guess.value = "";
+                    hasEnded.value = false;
+                }
+                else{
+                    //You Win!
+                }
             }, 2000);
         }
     });

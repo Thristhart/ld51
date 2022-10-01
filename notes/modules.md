@@ -55,3 +55,37 @@
 ### Level Up Effect
 
 -   The game starts by giving you a word with 4 letters in common, you lose one of those letters for each level you've got.
+
+## Simongus
+
+### Concept
+
+-   Simon from Amogus but.... (something, I hope?)
+
+### Level Up Requirement
+
+-   Press the correct buttons lvl times.
+
+### Level Up Effect
+
+-   Sequence extends.
+
+## A Queeez?
+
+## Picross???
+
+## Crank??
+
+## Crossword
+
+### Concept
+
+-   A crossword, manually written, I think.
+
+### Level Up Requirement
+
+-   Complete the current crossword.
+
+### Level Up Effect
+
+-   Proceed to next crossword, embiggen.
