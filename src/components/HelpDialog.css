@@ -1,0 +1,53 @@
+@font-face {
+    font-family: "Magic Book";
+    src: url(../assets/fonts/magicbook.ttf);
+}
+@font-face {
+    font-family: "Lantern";
+    src: url(../assets/fonts/lantern.ttf);
+}
+.helpDialog:not([open]) {
+    display: none;
+}
+.helpDialog {
+    background-image: url(../assets/images/book.png);
+    background-size: cover;
+    width: 80vmin;
+    height: 47vmin;
+
+    position: absolute;
+    top: -20vmin;
+    left: -20vmin;
+
+    z-index: 10;
+
+    border: none;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+
+    padding-left: 9.5vmin;
+    padding-top: 4.5vmin;
+    padding-right: 4vmin;
+    padding-bottom: 4.5vmin;
+    box-sizing: border-box;
+
+    font-family: "Magic Book", serif;
+    font-size: 2vmin;
+}
+.helpDialog h2 {
+    font-family: "Lantern", serif;
+}
+.closeButton {
+    position: absolute;
+    top: 1vmin;
+    right: 1vmin;
+    border-radius: 50%;
+    border: 1px solid black;
+    color: white;
+    width: 3vmin;
+    height: 3vmin;
+    background: black;
+    font-size: 2vmin;
+}

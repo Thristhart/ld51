@@ -1,3 +1,4 @@
+import mdx from "@mdx-js/rollup";
 import preact from "@preact/preset-vite";
 import path from "path";
 
@@ -8,5 +9,5 @@ export default {
         },
     },
     base: "/ld51/",
-    plugins: [preact({ devtoolsInProd: true })],
+    plugins: [preact({ devtoolsInProd: true }), mdx()],
 };

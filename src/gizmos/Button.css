@@ -8,6 +8,9 @@
 
     color: white;
     font-size: 3vmin;
+
+    width: 100%;
+    height: 100%;
 }
 .buttonGizmo:active {
     box-shadow: 0 0 0.3em rgb(1 1 1 / 30%);
