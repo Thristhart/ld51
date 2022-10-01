@@ -1,0 +1,91 @@
+.wordle {
+    display: grid;
+    --color-miss: #787c7e;
+    --color-near: #c9b458;
+    --color-hit: #6aaa64;
+    box-sizing: border-box;
+    gap: 0.5vmin;
+}
+.guess {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    box-sizing: border-box;
+    font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+    gap: 0.5vmin;
+}
+.invalid {
+    animation: guessShake 600ms;
+}
+@keyframes guessShake {
+    10%,
+    90% {
+        transform: translateX(-1px);
+    }
+    20%,
+    80% {
+        transform: translateX(2px);
+    }
+    30%,
+    50%,
+    70% {
+        transform: translateX(-4px);
+    }
+    40%,
+    60% {
+        transform: translateX(4px);
+    }
+}
+.guessLetter {
+    border: 2px solid #d3d6da;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 2vmin;
+    line-height: 2vmin;
+    text-align: center;
+    vertical-align: middle;
+}
+.guessLetter.filled {
+    border-color: black;
+}
+
+.flipOut {
+    animation: flipOut 250ms ease-in;
+}
+@keyframes flipOut {
+    0% {
+        transform: rotateX(-90deg);
+    }
+    100% {
+        transform: rotateX(0);
+    }
+}
+.flipIn {
+    animation: flipIn 250ms ease-in;
+}
+@keyframes flipIn {
+    0% {
+        transform: rotateX(0);
+    }
+    100% {
+        transform: rotateX(-90deg);
+    }
+}
+.guessLetter.hit {
+    background-color: var(--color-hit);
+    color: white;
+    border: none;
+}
+.guessLetter.near {
+    background-color: var(--color-near);
+    color: white;
+    border: none;
+}
+.guessLetter.miss {
+    background-color: var(--color-miss);
+    color: white;
+    border: none;
+}

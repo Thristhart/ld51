@@ -1,7 +1,7 @@
 import { signal, useSignalEffect } from "@preact/signals";
 import { useGameTimeSeconds, useGizmoList } from "~/Game";
 import "./GizmoGrid.css";
-import { Button } from "./gizmos/Button";
+import { Wordle } from "./gizmos/Wordle";
 
 export const GizmoGrid = () => {
     const gizmos = useGizmoList();
@@ -10,7 +10,7 @@ export const GizmoGrid = () => {
 
     useSignalEffect(() => {
         if (gameTimeSeconds.value / 10 >= gizmos.value.length) {
-            gizmos.value = [...gizmos.value, { Component: Button, level: signal(1) }];
+            gizmos.value = [...gizmos.value, { Component: Wordle, level: signal(1) }];
         }
     });
 
