@@ -3,12 +3,13 @@ import { ComponentChildren, createContext, FunctionComponent } from "preact";
 import { useContext, useState } from "preact/hooks";
 import { GizmoGrid } from "~/GizmoGrid";
 import { Timer } from "~/gizmos/Timer";
+import { AudioProvider } from "./components/AudioContext";
 import { Button } from "./gizmos/Button";
 
 export interface GizmoProps {
     readonly level: Signal<number>;
 }
-interface Gizmo {
+export interface Gizmo {
     readonly Component: FunctionComponent<GizmoProps>;
     readonly level: Signal<number>;
 }
@@ -58,7 +59,9 @@ export const useGameTimeSeconds = () => {
 export const Game = () => {
     return (
         <GameStateProvider>
-            <GizmoGrid />
+            <AudioProvider>
+                <GizmoGrid />
+            </AudioProvider>
         </GameStateProvider>
     );
 };
