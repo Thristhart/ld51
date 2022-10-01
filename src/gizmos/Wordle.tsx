@@ -1,12 +1,40 @@
 import { Signal, useSignal, useSignalEffect } from "@preact/signals";
 import cn from "classnames";
-import { useEffect } from "preact/hooks";
+import { useEffect, useMemo } from "preact/hooks";
 import { GizmoProps } from "~/Game";
 import "./Wordle.css";
 import wordList from "./wordle_wordlist.json";
 
-function getRandomAnswer() {
-    return wordList.correct[Math.floor(Math.random() * wordList.correct.length)];
+function getRandomAnswer(level: Signal<number>) {
+    let success = false;
+    let attempt = "";
+    let possibleMatches: string[] = [];
+    while (!success) {
+        attempt = wordList.correct[Math.floor(Math.random() * wordList.correct.length)];
+        possibleMatches = [];
+        possibleMatches = [
+            ...possibleMatches,
+            ...[...wordList.valid, ...wordList.correct].filter((x) =>
+                isWordAXLettersFromWordB(attempt, x, level.value)
+            ),
+        ];
+
+        if (possibleMatches.length != 0) {
+            success = true;
+        }
+        console.log(attempt, success);
+    }
+    return { word: attempt, possibleMatches };
+}
+
+function isWordAXLettersFromWordB(a: string, b: string, x: number) {
+    let differences = 0;
+    for (let pos = 0; pos < a.length; pos++) {
+        if (a[pos] !== b[pos]) {
+            differences++;
+        }
+    }
+    return differences === x;
 }
 
 interface GuessLetterProps {
@@ -48,9 +76,14 @@ const Guess = ({ guess, word, isInput, isInvalid }: GuessProps) => {
 };
 
 export const Wordle = ({ level }: GizmoProps) => {
-    const word = useSignal(getRandomAnswer());
+    let result = useMemo(() => getRandomAnswer(level), []);
+    const word = useSignal(result.word);
     const guess = useSignal("");
-    const guesses = useSignal<string[]>([]);
+    const initialGuess = useMemo(
+        () => result.possibleMatches[Math.floor(Math.random() * result.possibleMatches.length)],
+        []
+    );
+    const guesses = useSignal<string[]>([initialGuess]);
 
     const isGuessInvalid = useSignal(false);
 
@@ -97,8 +130,9 @@ export const Wordle = ({ level }: GizmoProps) => {
         }
         if (hasEnded.value) {
             setTimeout(() => {
-                word.value = getRandomAnswer();
-                guesses.value = [];
+                let result = getRandomAnswer(level);
+                word.value = result.word;
+                guesses.value = [result.possibleMatches[Math.floor(Math.random() * result.possibleMatches.length)]];
                 guess.value = "";
                 hasEnded.value = false;
             }, 2000);
