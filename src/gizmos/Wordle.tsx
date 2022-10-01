@@ -22,7 +22,6 @@ function getRandomAnswer(level: Signal<number>) {
         if (possibleMatches.length != 0) {
             success = true;
         }
-        console.log(attempt, success);
     }
     return { word: attempt, possibleMatches };
 }
@@ -46,6 +45,16 @@ const GuessLetter = ({ letter, type, className }: GuessLetterProps) => {
     return <span class={cn("guessLetter", type, className)}>{letter === " " ? <>&nbsp;</> : letter}</span>;
 };
 
+function getNotHitLetters(word: string, guess: string) {
+    const notHitLetters: string[] = [];
+    for (let pos = 0; pos < word.length; pos++) {
+        if (word[pos] !== guess[pos]) {
+            notHitLetters.push(word[pos]);
+        }
+    }
+    return notHitLetters;
+}
+
 interface GuessProps {
     readonly guess: string;
     readonly word: Signal<string>;
@@ -53,24 +62,27 @@ interface GuessProps {
     readonly isInvalid?: Signal<boolean>;
 }
 const Guess = ({ guess, word, isInput, isInvalid }: GuessProps) => {
+    const notHitLetters = useMemo(() => getNotHitLetters(word.value, guess), [word.value, guess]);
     return (
         <span class={cn("guess", { invalid: isInvalid?.value })}>
-            {guess.split("").map((guessLetter, letterIndex) => (
-                <GuessLetter
-                    letter={guessLetter}
-                    type={
-                        isInput
-                            ? guessLetter === " "
-                                ? "none"
-                                : "filled"
-                            : guessLetter === word.value[letterIndex]
-                            ? "hit"
-                            : word.value.includes(guessLetter)
-                            ? "near"
-                            : "miss"
+            {guess.split("").map((guessLetter, letterIndex) => {
+                let type: GuessLetterProps["type"] = "none";
+                if (isInput) {
+                    if (guessLetter !== " ") {
+                        type = "filled";
                     }
-                />
-            ))}
+                } else {
+                    if (guessLetter === word.value[letterIndex]) {
+                        type = "hit";
+                    } else if (notHitLetters.includes(guessLetter)) {
+                        type = "near";
+                        notHitLetters.splice(notHitLetters.indexOf(guessLetter), 1);
+                    } else {
+                        type = "miss";
+                    }
+                }
+                return <GuessLetter letter={guessLetter} type={type} />;
+            })}
         </span>
     );
 };
