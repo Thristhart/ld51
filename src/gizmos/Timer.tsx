@@ -7,8 +7,8 @@ export const Timer = () => {
     const time = useGameTime();
     return (
         <Canvas
-            width={100}
-            height={100}
+            width={640}
+            height={640}
             tick={(canvas, context) => {
                 const period = time.value % TEN_SECONDS;
 

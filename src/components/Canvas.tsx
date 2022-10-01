@@ -18,6 +18,9 @@ export const Canvas = ({ width, height, tick, canvasRef, className }: CanvasProp
         const canvas = ref.current;
         if (canvas) {
             contextRef.current = canvas.getContext("2d");
+            if (contextRef.current) {
+                contextRef.current.imageSmoothingEnabled = false;
+            }
         }
     }, []);
 
