@@ -1,0 +1,10 @@
+.helpButton {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 50%;
+    border: 1px solid black;
+    width: 2vmin;
+    height: 2vmin;
+    background: transparent;
+}

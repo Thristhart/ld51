@@ -1,7 +1,24 @@
-import { signal, useSignalEffect } from "@preact/signals";
-import { useGameTimeSeconds, useGizmoList } from "~/Game";
+import { signal, useSignal, useSignalEffect } from "@preact/signals";
+import { Gizmo, useGameTimeSeconds, useGizmoList } from "~/Game";
+import { useLevelUpSound } from "./components/AudioContext";
 import "./GizmoGrid.css";
 import { Wordle } from "./gizmos/Wordle";
+
+interface GizmoWrapperProps {
+    readonly gizmo: Gizmo;
+}
+const GizmoWrapper = ({ gizmo }: GizmoWrapperProps) => {
+    const { Component, level } = gizmo;
+    const previousLevel = useSignal(level.peek());
+    const levelUpSound = useLevelUpSound();
+    useSignalEffect(() => {
+        if (level.value > previousLevel.peek()) {
+            levelUpSound.play();
+        }
+        previousLevel.value = level.peek();
+    });
+    return <Component level={level} />;
+};
 
 export const GizmoGrid = () => {
     const gizmos = useGizmoList();
@@ -16,8 +33,8 @@ export const GizmoGrid = () => {
 
     return (
         <div class="gizmoGrid">
-            {gizmos.value.map(({ Component, level }, index) => {
-                return <Component key={index} level={level} />;
+            {gizmos.value.map((gizmo, index) => {
+                return <GizmoWrapper key={index} gizmo={gizmo} />;
             })}
         </div>
     );
