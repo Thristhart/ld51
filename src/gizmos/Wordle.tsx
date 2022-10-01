@@ -1,6 +1,6 @@
 import { Signal, useSignal, useSignalEffect } from "@preact/signals";
 import cn from "classnames";
-import { useEffect, useState } from "preact/hooks";
+import { useEffect } from "preact/hooks";
 import { GizmoProps } from "~/Game";
 import "./Wordle.css";
 import wordList from "./wordle_wordlist.json";
@@ -25,10 +25,6 @@ interface GuessProps {
     readonly isInvalid?: Signal<boolean>;
 }
 const Guess = ({ guess, word, isInput, isInvalid }: GuessProps) => {
-    const [initialInputState] = useState(isInput);
-    if (initialInputState !== isInput) {
-        console.log("changed isInput", isInput);
-    }
     return (
         <span class={cn("guess", { invalid: isInvalid?.value })}>
             {guess.split("").map((guessLetter, letterIndex) => (

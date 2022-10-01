@@ -1,9 +1,9 @@
-import { signal, Signal, useComputed, useSignal } from "@preact/signals";
+import { Signal, signal, useComputed, useSignal } from "@preact/signals";
 import { ComponentChildren, createContext, FunctionComponent } from "preact";
 import { useContext, useState } from "preact/hooks";
 import { GizmoGrid } from "~/GizmoGrid";
 import { Timer } from "~/gizmos/Timer";
-import { Wires } from "./gizmos/Wires";
+import { Button } from "./gizmos/Button";
 
 export interface GizmoProps {
     readonly level: Signal<number>;
@@ -32,7 +32,7 @@ const GameStateContext = createContext<GameState | null>(null);
 const GameStateProvider = ({ children }: { children: ComponentChildren }) => {
     const gizmos = useSignal<Gizmo[]>([
         { Component: Timer, level: signal(5) },
-        { Component: Wires, level: signal(1) },
+        { Component: Button, level: signal(1) },
     ]);
 
     return <GameStateContext.Provider value={useState({ gizmos, gameTime })[0]}>{children}</GameStateContext.Provider>;
