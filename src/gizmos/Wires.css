@@ -1,132 +1,94 @@
-/* adapted from https://codepen.io/Mamboleoo/pen/NWrBoep */
-.c {
-    fill: #273065;
-    stroke: #1a1b36;
+.wires {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(var(--wire-count), 1fr);
+    align-items: center;
+    grid-auto-flow: column;
+    background-color: rgb(30, 32, 33);
+    padding-left: 0;
+    padding-right: 0;
 }
-.c,
-.d,
-.e,
-.f,
-.k,
-.u {
-    stroke-miterlimit: 10;
+.wire {
+    box-sizing: border-box;
+
+    width: 1.5vw;
+    height: 1vw;
+
+    position: relative;
+
+    border-top: 0.3vmin solid black;
+    border-bottom: 0.3vmin solid black;
+    background-color: black;
 }
-.c,
-.d,
-.e,
-.f,
-.u,
-.y {
-    stroke-width: 5px;
+.wireLeft {
+    grid-column: 1/1;
 }
-.d {
-    fill: #71160e;
-    stroke: #280f10;
+.wireRight {
+    grid-column: 2/2;
+    justify-self: end;
+    width: 2vw;
 }
-.e {
-    fill: #8c6c15;
+.wireHead {
+    width: 2vmin;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translate(80%, -28%);
 }
-.e,
-.u {
-    stroke: #38321a;
+.wireRight .wireHead {
+    right: unset;
+    left: 0;
+    transform: translate(-80%, -28%) rotate(180deg);
 }
-.f {
-    fill: #212021;
-    stroke: #000;
-}
-.h {
+.wireHeadStroke {
     fill: #9b3015;
     stroke: #471d12;
-}
-.h,
-.y {
     stroke-linecap: round;
     stroke-linejoin: round;
 }
-.k,
-.y {
-    fill: none;
-}
-.k {
-    stroke: #1d1d1b;
-    stroke-width: 6px;
-}
-.l {
-    fill: #d9c905;
-}
-.m {
-    fill: #25378d;
-}
-.n {
-    fill: #324d9c;
-}
-.o {
-    fill: #a71916;
-}
-.p {
-    fill: #e52320;
-}
-.q {
-    fill: #aa9f17;
-}
-.r {
-    fill: #ffeb13;
-}
-.s {
-    fill: #90378c;
-}
-.t {
-    fill: #a6529a;
-}
-.u {
-    fill: #1d1d1b;
-}
-.v {
-    fill: #5b5c64;
-}
-.w {
-    fill: #292829;
-}
-.x {
-    fill: #2f3038;
-}
-.y {
-    stroke: #252526;
+
+.connection {
+    position: absolute;
+    width: var(--wire-width);
+    pointer-events: none;
+    transform-origin: 0 50%;
 }
 
-.line {
-    stroke-width: 18px;
-    pointer-events: none;
+[data-wiretype="yellow"] {
+    background-color: yellow;
+    border-top-color: rgb(149, 149, 0);
+    border-bottom-color: rgb(149, 149, 0);
 }
-.line-back {
-    stroke-width: 30px;
-    pointer-events: none;
+
+[data-wiretype="green"] {
+    background-color: green;
+    border-top-color: rgb(0, 81, 0);
+    border-bottom-color: rgb(0, 81, 0);
 }
-.line-1 {
-    stroke: #324d9c;
+
+[data-wiretype="red"] {
+    background-color: red;
+    border-top-color: rgb(121, 0, 0);
+    border-bottom-color: rgb(121, 0, 0);
 }
-.line-1.line-back {
-    stroke: #25378d;
+
+[data-wiretype="blue"] {
+    background-color: blue;
+    border-top-color: rgb(0, 0, 121);
+    border-bottom-color: rgb(0, 0, 121);
 }
-.line-2 {
-    stroke: #e52320;
+
+.leftPanel,
+.rightPanel {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2vmin;
+    background-color: #393e42;
 }
-.line-2.line-back {
-    stroke: #a71916;
+.leftPanel {
+    left: 0;
 }
-.line-3 {
-    stroke: #ffeb13;
-}
-.line-3.line-back {
-    stroke: #aa9f17;
-}
-.line-4 {
-    stroke: #a6529a;
-}
-.line-4.line-back {
-    stroke: #90378c;
-}
-.drag {
-    fill: white;
-    opacity: 0;
+.rightPanel {
+    right: 0;
 }

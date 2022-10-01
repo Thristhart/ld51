@@ -5,6 +5,8 @@ import { GizmoGrid } from "~/GizmoGrid";
 import { Timer } from "~/gizmos/Timer";
 import { AudioProvider } from "./components/AudioContext";
 import { Button } from "./gizmos/Button";
+import { Wires } from "./gizmos/Wires";
+import { Wordle } from "./gizmos/Wordle";
 
 export interface GizmoProps {
     readonly level: Signal<number>;
@@ -34,6 +36,8 @@ const GameStateProvider = ({ children }: { children: ComponentChildren }) => {
     const gizmos = useSignal<Gizmo[]>([
         { Component: Timer, level: signal(5) },
         { Component: Button, level: signal(1) },
+        { Component: Wordle, level: signal(1) },
+        { Component: Wires, level: signal(1) },
     ]);
 
     return <GameStateContext.Provider value={useState({ gizmos, gameTime })[0]}>{children}</GameStateContext.Provider>;
