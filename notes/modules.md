@@ -41,3 +41,17 @@
 ### Level Up Effect
 
 -   Expend the grid in 1 direction: (1x1, 2x1, 2x2, 3x2, 3x3, 4x3, 4x4)
+
+## Wordle
+
+### Concept
+
+-   It's just wordle, but it starts off as helpful
+
+### Level Up Requirement
+
+-   Guess the correct word.
+
+### Level Up Effect
+
+-   The game starts by giving you a word with 4 letters in common, you lose one of those letters for each level you've got.
