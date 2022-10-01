@@ -1,16 +1,16 @@
-.numberGizmo{
-    display: flex;
-    flex-grow: 1;
-    flex-direction: column;
-    flex-shrink: 0;
-    background-color: blue;
+@font-face {
+    font-family: "Schoolbell";
+    src: url("../assets/fonts/Schoolbell-Regular.ttf");
 }
-
-.numberRow{
-    display: flex;
-    flex-grow: 1;
-    flex-flow: row wrap;
-    flex-shrink: 0;
+.numberGizmo {
+    display: grid;
+    grid-auto-flow: dense;
+    grid-template-rows: repeat(var(--row-count), 1fr);
+    grid-template-columns: repeat(var(--column-count), 1fr);
+    background-color: #003dd5;
+    box-sizing: border-box;
+    border: 1vmin solid #ababab;
+    padding: 0.2vmin;
 }
 
 .numberButton {
@@ -21,14 +21,15 @@
     flex-basis: 0;
     align-items: center;
     justify-content: center;
-    font-size: 2vmin;
+    font-size: 2.5vmin;
     border-radius: 0;
     border: thin solid black;
-    background-color: aqua;
+    background-color: #8fa1d1;
+    font-family: "Schoolbell", cursive;
 }
 
 .numberButton.pressed {
-    background-color: greenyellow;
+    background-color: #00a141;
 }
 
 .numberButton:active {

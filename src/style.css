@@ -12,7 +12,7 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: black;
+    background-color: #0d1117;
 }
 
 canvas {

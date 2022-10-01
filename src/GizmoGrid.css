@@ -4,7 +4,7 @@
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(5, 1fr);
-    background-color: rgb(56, 94, 123);
+    background-color: #0d1117;
 }
 
 .gizmoGrid > * {

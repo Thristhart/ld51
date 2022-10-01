@@ -4,7 +4,7 @@ import { useMemo } from "preact/hooks";
 import { GizmoProps } from "~/Game";
 import "./Numbers.css";
 
-let sizes = [
+const sizes = [
     [1, 1],
     [2, 1],
     [2, 2],
@@ -17,37 +17,20 @@ let sizes = [
 const gridID = signal(0);
 
 function drawGrid(size: number[], nextValue: Signal<number>, resetGrid: () => void) {
-    const [x, y] = size;
-    const availableValues = Array.from({ length: x * y }, (_, index) => index);
-    let rows = [];
-    for (let posY = 0; posY < y || posY < x; posY++) {
-        let cells = [];
-        let real = posY < y;
-        for (let posX = 0; posX < x; posX++) {
-            if (real) {
-                const cellValue =
-                    availableValues.splice(
-                        availableValues.indexOf(Math.floor(Math.random() * availableValues.length)),
-                        1
-                    )[0] + 1;
-                cells.push(
-                    <NumberButton
-                        className="numberButton"
-                        nextValue={nextValue}
-                        value={cellValue}
-                        resetGrid={resetGrid}
-                    />
-                );
-            } else {
-                cells.push(<div class="emptyNumber"></div>);
-            }
-        }
-        rows.push(<span class="numberRow">{cells}</span>);
+    const count = size[0] * size[1];
+    const availableValues = Array.from({ length: count }, (_, index) => index);
+    const buttons = [];
+    for (let i = 0; i < count; i++) {
+        const cellValue =
+            availableValues.splice(availableValues.indexOf(Math.floor(Math.random() * availableValues.length)), 1)[0] +
+            1;
+        buttons.push(
+            <NumberButton className="numberButton" nextValue={nextValue} value={cellValue} resetGrid={resetGrid} />
+        );
     }
-    console.log(rows);
     return (
-        <div class="numberGizmo" key={gridID.value}>
-            {rows}
+        <div class="numberGizmo" key={gridID.value} style={{ "--column-count": size[0], "--row-count": size[1] }}>
+            {buttons}
         </div>
     );
 }
@@ -65,7 +48,6 @@ export const NumberButton = ({ className, value, nextValue, resetGrid }: NumberB
         <button
             class={cn(className, isPressed.value && "pressed")}
             onClick={() => {
-                console.log(nextValue.value, value);
                 if (nextValue.value === value) {
                     nextValue.value++;
                     isPressed.value = true;
@@ -92,7 +74,12 @@ export const Numbers = ({ level }: GizmoProps) => {
     useSignalEffect(() => {
         if (nextValue.value > size.value[0] * size.value[1]) {
             level.value = level.peek() + 1;
-            size.value = sizes[level.value - 1];
+            const nextSize = sizes[level.value - 1];
+            if (nextSize === undefined) {
+                // you win
+                return;
+            }
+            size.value = nextSize;
             resetGrid();
         }
     });
