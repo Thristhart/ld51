@@ -60,6 +60,9 @@ export const Wordle = ({ level }: GizmoProps) => {
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
+            if (hasEnded.value) {
+                return;
+            }
             if (event.key === "Enter") {
                 if (wordList.valid.includes(guess.value) || wordList.correct.includes(guess.value)) {
                     guesses.value = [...guesses.value, guess.value];
@@ -97,9 +100,12 @@ export const Wordle = ({ level }: GizmoProps) => {
             hasEnded.value = 1;
         }
         if (hasEnded.value) {
-            word.value = getRandomAnswer();
-            guesses.value = [];
-            guess.value = "";
+            setTimeout(() => {
+                word.value = getRandomAnswer();
+                guesses.value = [];
+                guess.value = "";
+                hasEnded.value = false;
+            }, 2000);
         }
     });
 
