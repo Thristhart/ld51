@@ -9,7 +9,12 @@ interface WireLeftProps {
 }
 const WireLeft = ({ type, hideHead }: WireLeftProps) => {
     return (
-        <div class={cn("wire", "wireLeft")} data-wiretype={type}>
+        <div
+            class={cn("wire", "wireLeft")}
+            data-wiretype={type}
+            onMouseDown={(e) => {
+                e.preventDefault();
+            }}>
             {!hideHead && <WireHead />}
         </div>
     );
