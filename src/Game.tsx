@@ -6,6 +6,7 @@ import { Timer } from "~/gizmos/Timer";
 import { AudioProvider } from "./components/AudioContext";
 import { Button } from "./gizmos/Button";
 import { Numbers } from "./gizmos/Numbers";
+import { Rhythm } from "./gizmos/Rhythm";
 import { Wires } from "./gizmos/Wires";
 import { Wordle } from "./gizmos/Wordle";
 
@@ -40,6 +41,7 @@ const GameStateProvider = ({ children }: { children: ComponentChildren }) => {
         { Component: Button, level: signal(1) },
         { Component: Wordle, level: signal(1) },
         { Component: Wires, level: signal(1) },
+        { Component: Rhythm, level: signal(1) },
     ]);
 
     return <GameStateContext.Provider value={useState({ gizmos, gameTime })[0]}>{children}</GameStateContext.Provider>;

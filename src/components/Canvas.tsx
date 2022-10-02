@@ -8,8 +8,9 @@ interface CanvasProps {
     readonly tick?: (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) => void;
     readonly canvasRef?: RefObject<HTMLCanvasElement>;
     readonly className?: string;
+    readonly onClick?: () => void;
 }
-export const Canvas = ({ width, height, tick, canvasRef, className }: CanvasProps) => {
+export const Canvas = ({ width, height, tick, canvasRef, className, onClick }: CanvasProps) => {
     const internalRef = useRef<HTMLCanvasElement>(null);
     const ref = canvasRef ?? internalRef;
     const contextRef = useRef<CanvasRenderingContext2D | null>(null);
@@ -30,5 +31,5 @@ export const Canvas = ({ width, height, tick, canvasRef, className }: CanvasProp
         }
     });
 
-    return <canvas ref={ref} width={width} height={height} className={className} />;
+    return <canvas ref={ref} width={width} height={height} className={className} onClick={onClick} />;
 };
