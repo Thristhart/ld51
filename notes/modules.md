@@ -70,39 +70,51 @@
 
 -   Sequence extends.
 
-## Symbols
-
 ## Something Maze-y?
 
-## Venting Gas?
+### Concept
+
+-   It's a maze.
+
+### Level Up Requirement
+
+-   Get to the end.
+
+### Level Up Effect
+
+-   Maze gets bigger.
+
+## Minesweeper
+
+## Tower stacker?
 
 ## A Queeez?
 
-## Picross???
+## Symbols
+
+## Venting Gas?
 
 ## Crank??
 
-## Hopscotch??
+## Picross???
 
-## Minigolfesqe??
+## A runner?
+
+## Some way to complete modules outside of the normal. (Cheat step.)
+
+## Stats panels? (APM, lvl/minute, something like that?)
+
+## Just the Jack-in-the-box module again
+
+## Can we fit a Super Hexagon omage in here?
 
 ## Something Avoidery
 
 ## Something Crafty, ala Minecraft/Candy Box.
 
-## A runner?
+## Minigolfesqe??
 
-## Tower stacker?
-
-## Can we fit a Super Hexagon omage in here?
-
-## Just the Jack-in-the-box module again
-
-## Stats panels? (APM, lvl/minute, something like that?)
-
-## Some way to complete modules outside of the normal. (Cheat step.)
-
-## Probably not Minesweeper, that seems like a lot.
+## Hopscotch??
 
 ## Crossword
 

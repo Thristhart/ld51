@@ -1,0 +1,32 @@
+.mazeGizmo > canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.directionbutton{
+    border: none;
+}
+
+.rightButton {
+    position:absolute;
+    right: 0%;
+    top: 50%;
+}
+
+.leftButton {
+    position:absolute;
+    left: 0%;
+    top: 50%;
+}
+
+.upButton {
+    position:absolute;
+    left: 45%;
+    top: 0%;
+}
+
+.downButton {
+    position:absolute;
+    left: 45%;
+    bottom: 0%;
+}
