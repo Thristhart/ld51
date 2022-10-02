@@ -76,6 +76,10 @@
 
 ## Crank??
 
+## Hopscotch??
+
+## Probably not Minesweeper, that seems like a lot.
+
 ## Crossword
 
 ### Concept

@@ -1,17 +1,52 @@
 import { signal, Signal, useSignal, useSignalEffect } from "@preact/signals";
 import cn from "classnames";
+import { Howl } from "howler";
 import { useMemo } from "preact/hooks";
 import { GizmoProps } from "~/Game";
+import numbers1 from "../assets/audio/numbers_1.ogg";
+import numbers10 from "../assets/audio/numbers_10.ogg";
+import numbers11 from "../assets/audio/numbers_11.ogg";
+import numbers12 from "../assets/audio/numbers_12.ogg";
+import numbers13 from "../assets/audio/numbers_13.ogg";
+import numbers14 from "../assets/audio/numbers_14.ogg";
+import numbers15 from "../assets/audio/numbers_15.ogg";
+import numbers16 from "../assets/audio/numbers_16.ogg";
+import numbers2 from "../assets/audio/numbers_2.ogg";
+import numbers3 from "../assets/audio/numbers_3.ogg";
+import numbers4 from "../assets/audio/numbers_4.ogg";
+import numbers5 from "../assets/audio/numbers_5.ogg";
+import numbers6 from "../assets/audio/numbers_6.ogg";
+import numbers7 from "../assets/audio/numbers_7.ogg";
+import numbers8 from "../assets/audio/numbers_8.ogg";
+import numbers9 from "../assets/audio/numbers_9.ogg";
 import "./Numbers.css";
 
 const sizes = [
-    [1, 1],
-    [2, 1],
     [2, 2],
     [3, 2],
     [3, 3],
     [4, 3],
     [4, 4],
+];
+
+const sounds = [
+    undefined,
+    new Howl({ src: numbers1, volume: 0.4 }),
+    new Howl({ src: numbers2, volume: 0.4 }),
+    new Howl({ src: numbers3, volume: 0.4 }),
+    new Howl({ src: numbers4, volume: 0.4 }),
+    new Howl({ src: numbers5, volume: 0.4 }),
+    new Howl({ src: numbers6, volume: 0.4 }),
+    new Howl({ src: numbers7, volume: 0.4 }),
+    new Howl({ src: numbers8, volume: 0.4 }),
+    new Howl({ src: numbers9, volume: 0.4 }),
+    new Howl({ src: numbers10, volume: 0.4 }),
+    new Howl({ src: numbers11, volume: 0.4 }),
+    new Howl({ src: numbers12, volume: 0.4 }),
+    new Howl({ src: numbers13, volume: 0.4 }),
+    new Howl({ src: numbers14, volume: 0.4 }),
+    new Howl({ src: numbers15, volume: 0.4 }),
+    new Howl({ src: numbers16, volume: 0.4 }),
 ];
 
 const gridID = signal(0);
@@ -51,6 +86,7 @@ export const NumberButton = ({ className, value, nextValue, resetGrid }: NumberB
                 if (nextValue.value === value) {
                     nextValue.value++;
                     isPressed.value = true;
+                    sounds[value]?.play();
                 } else {
                     resetGrid();
                 }
