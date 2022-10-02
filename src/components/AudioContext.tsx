@@ -15,7 +15,7 @@ interface AudioProviderProps {
     readonly children: ComponentChildren;
 }
 export const AudioProvider = ({ children }: AudioProviderProps) => {
-    const levelUp = useSignal(new Howl({ src: levelUpPath, volume: 0.1 }));
+    const levelUp = useSignal(new Howl({ src: levelUpPath, volume: 0.03 }));
     const muted = useSignal(false);
     useSignalEffect(() => {
         Howler.mute(muted.value);
