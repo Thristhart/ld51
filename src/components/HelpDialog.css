@@ -23,14 +23,15 @@
 
     border: none;
     background-color: transparent;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    column-gap: 4vmin;
 
     padding-left: 9.5vmin;
     padding-top: 4.5vmin;
-    padding-right: 4vmin;
-    padding-bottom: 4.5vmin;
+    padding-right: 8vmin;
+    padding-bottom: 7vmin;
     box-sizing: border-box;
 
     font-family: "Magic Book", serif;

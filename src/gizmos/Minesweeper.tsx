@@ -1,7 +1,9 @@
 import { signal, Signal, useComputed, useSignal, useSignalEffect } from "@preact/signals";
 import { useMemo } from "preact/hooks";
+import { HelpButton } from "~/components/HelpButton";
 import { GizmoProps } from "~/Game";
 import "./Minesweeper.css";
+import MinesweeperHelp from "./MinesweeperHelp.mdx";
 
 enum CellState {
     Hidden = "hidden",
@@ -305,6 +307,9 @@ export const Minesweeper = ({ level }: GizmoProps) => {
         <div class="minesweeper">
             <FaceButton gameState={gameState} />
             <Digits grid={grid.value} gameState={gameState} mineCount={mineCount} />
+            <HelpButton>
+                <MinesweeperHelp />
+            </HelpButton>
             <Grid grid={grid.value} gameState={gameState} mineCount={mineCount} />
         </div>
     );

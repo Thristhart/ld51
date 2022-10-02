@@ -1,0 +1,35 @@
+<section>
+    <div class="exampleLabel">
+        <div class="minesweeperCell" data-state={"hidden"} />
+        <span>An unrevealed cell</span>
+    </div>
+    <div class="exampleLabel">
+        <div class="minesweeperCell" data-state={"mine"} />
+        <span>A mine</span>
+    </div>
+    An unrevealed tile might have a mine, or it might not. Your goal is to clear all the tiles that don't have mines.
+    <div class="exampleLabel">
+        <div class="minesweeperCell" data-state={"revealed"} />
+        <span>A tile with no adjacent mines</span>
+    </div>
+    <div class="exampleLabel">
+        <div class="minesweeperCell" data-state={"revealed"} style={{ "--nearby": 1 }} />
+        <span>A tile with one adjacent mine</span>
+    </div>
+    To tell whether a tile contains a mine, you must consult the clues. When a cell is revealed that is next to a mine, a
+    number will appear. That's the number of mines adjacent to that tile.
+</section>
+<section>
+    <div class="exampleGrid">
+        <div class="minesweeperCell" data-state={"revealed"} style={{ "--nearby": 1 }} />
+        <div class="minesweeperCell" data-state={"revealed"} style={{ "--nearby": 1 }} />
+        <div class="minesweeperCell" data-state={"revealed"} />
+        <div class="minesweeperCell" data-state={"mine"} />
+        <div class="minesweeperCell" data-state={"revealed"} style={{ "--nearby": 2 }} />
+        <div class="minesweeperCell" data-state={"revealed"} style={{ "--nearby": 1 }} />
+        <div class="minesweeperCell" data-state={"revealed"} style={{ "--nearby": 2 }} />
+        <div class="minesweeperCell" data-state={"mine"} />
+        <div class="minesweeperCell" data-state={"revealed"} style={{ "--nearby": 1 }} />
+    </div>
+    You'll complete a level when all tiles that don't contain a mine have been revealed.
+</section>
