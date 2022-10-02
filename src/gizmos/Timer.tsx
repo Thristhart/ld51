@@ -1,7 +1,7 @@
 import { useSignal } from "@preact/signals";
 import { Canvas } from "~/components/Canvas";
 import { TEN_SECONDS } from "~/constants";
-import { GizmoProps, useGameTime } from "~/Game";
+import { useGameTime } from "~/Game";
 import "./Timer.css";
 
 const hourglassPolygon = [
@@ -111,6 +111,6 @@ const Hourglass = () => {
     );
 };
 
-export const Timer = ({ level }: GizmoProps) => {
+export const Timer = () => {
     return <Hourglass />;
 };
