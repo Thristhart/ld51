@@ -19,6 +19,7 @@ import numbers6 from "../assets/audio/numbers_6.ogg";
 import numbers7 from "../assets/audio/numbers_7.ogg";
 import numbers8 from "../assets/audio/numbers_8.ogg";
 import numbers9 from "../assets/audio/numbers_9.ogg";
+import wrongNumberPath from "../assets/audio/numbers_WRONG.ogg";
 import "./Numbers.css";
 
 const sizes = [
@@ -48,6 +49,7 @@ const sounds = [
     new Howl({ src: numbers15, volume: 0.4 }),
     new Howl({ src: numbers16, volume: 0.4 }),
 ];
+const wrongNumber = new Howl({ src: wrongNumberPath, volume: 0.3 });
 
 const gridID = signal(0);
 
@@ -88,6 +90,7 @@ export const NumberButton = ({ className, value, nextValue, resetGrid }: NumberB
                     isPressed.value = true;
                     sounds[value]?.play();
                 } else {
+                    wrongNumber.play();
                     resetGrid();
                 }
             }}>

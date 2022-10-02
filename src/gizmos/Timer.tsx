@@ -10,8 +10,8 @@ const hourglassPolygon = [
     [1, 0.0555],
     [0.95, 0.0555],
     [0.95, 0.28],
-    [0.6, 0.46],
-    [0.6, 0.54],
+    [0.55, 0.46],
+    [0.55, 0.54],
     [0.95, 0.72],
     [0.95, 0.9445],
     [1, 0.9445],
@@ -20,14 +20,14 @@ const hourglassPolygon = [
     [0.0, 0.9445],
     [0.05, 0.9445],
     [0.05, 0.72],
-    [0.4, 0.54],
-    [0.4, 0.46],
+    [0.45, 0.54],
+    [0.45, 0.46],
     [0.05, 0.28],
     [0.05, 0.0555],
     [0.0, 0.0555],
 ] as const;
 
-const flipDuration = 700;
+const flipDuration = 1000;
 
 const Hourglass = () => {
     const time = useGameTime();
@@ -45,9 +45,9 @@ const Hourglass = () => {
             tick={(canvas, context) => {
                 const period = time.value % TEN_SECONDS;
 
-                let progress = period / (TEN_SECONDS - flipDuration);
-                let flipProgress = 1 + (period - TEN_SECONDS) / flipDuration;
-                if (progress > 1) {
+                let progress = (period - flipDuration) / (TEN_SECONDS - flipDuration);
+                let flipProgress = period / flipDuration;
+                if (progress < 0) {
                     progress = 1;
                     canvas.style.transform = `rotate(${flipProgress * 180}deg)`;
                 } else if (canvas.style.transform) {
@@ -80,14 +80,14 @@ const Hourglass = () => {
                 );
                 // pillar
                 context.fillRect(
-                    0.39 * hourGlassWidth + left,
+                    0.45 * hourGlassWidth + left,
                     canvas.height / 2,
-                    0.21 * hourGlassWidth,
+                    0.1 * hourGlassWidth,
                     (canvas.height / 2) * (progress * 9)
                 );
                 // bottom
                 context.beginPath();
-                context.moveTo(left + hourGlassWidth * 0.4, canvas.height - (canvas.height / 2) * progress);
+                context.moveTo(left + hourGlassWidth * 0.45, canvas.height - (canvas.height / 2) * progress);
                 context.lineTo(
                     left + hourGlassWidth * 0.05,
                     canvas.height - (canvas.height / 2) * progress + hourGlassHeight * 0.18
@@ -98,7 +98,7 @@ const Hourglass = () => {
                     left + hourGlassWidth * 0.95,
                     canvas.height - (canvas.height / 2) * progress + hourGlassHeight * 0.18
                 );
-                context.lineTo(left + hourGlassWidth * 0.6, canvas.height - (canvas.height / 2) * progress);
+                context.lineTo(left + hourGlassWidth * 0.55, canvas.height - (canvas.height / 2) * progress);
                 context.closePath();
                 context.fill();
 
