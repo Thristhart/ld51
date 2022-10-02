@@ -3,7 +3,11 @@ import { Howl } from "howler";
 import { useEffect, useRef } from "preact/hooks";
 import { Canvas } from "~/components/Canvas";
 import { GizmoProps, useGameTime } from "~/Game";
-import testPath from "../assets/audio/rhythm_test_lvl1.ogg";
+import level1Path from "../assets/audio/rhythm_lvl1.ogg";
+import level2Path from "../assets/audio/rhythm_lvl2.ogg";
+import level3Path from "../assets/audio/rhythm_lvl3.ogg";
+import level4Path from "../assets/audio/rhythm_lvl4.ogg";
+import level5Path from "../assets/audio/rhythm_lvl5.ogg";
 
 enum Notes {
     Left,
@@ -113,11 +117,11 @@ const victoryPercentage = 0.75;
 const songs: Song[] = [
     {
         howl: new Howl({
-            src: testPath,
+            src: level1Path,
             volume: 0.1,
             sprite: {
-                background: [0, 18330],
-                pattern: [18330, 18000],
+                background: [0, 20470],
+                pattern: [20470, 18010],
             },
         }),
         beatMap: [
@@ -130,24 +134,143 @@ const songs: Song[] = [
             { time: 12, note: Notes.Up, hold: 2 },
         ],
     },
+    {
+        howl: new Howl({
+            src: level2Path,
+            volume: 0.1,
+            sprite: {
+                background: [0, 20470],
+                pattern: [20470, 18010],
+            },
+        }),
+        beatMap: [
+            { time: 4, note: Notes.Left, hold: 1 },
+            { time: 5, note: Notes.Up, hold: 1 },
+            { time: 6, note: Notes.Down, hold: 1 },
+            { time: 7, note: Notes.Up, hold: 0.5 },
+            { time: 7.5, note: Notes.Right, hold: 0.5 },
+            { time: 8, note: Notes.Down, hold: 1 },
+            { time: 9, note: Notes.Right, hold: 1 },
+            { time: 10, note: Notes.Up, hold: 0.5 },
+            { time: 10.5, note: Notes.Down, hold: 0.5 },
+            { time: 11, note: Notes.Left, hold: 0.5 },
+            { time: 11.5, note: Notes.Down, hold: 0.5 },
+            { time: 12, note: Notes.Up, hold: 2 },
+        ],
+    },
+    {
+        howl: new Howl({
+            src: level3Path,
+            volume: 0.1,
+            sprite: {
+                background: [0, 20470],
+                pattern: [20470, 18010],
+            },
+        }),
+        beatMap: [
+            { time: 4, hold: 1, note: Notes.Up },
+            { time: 5, hold: 0.5, note: Notes.Left },
+            { time: 6, hold: 0.5, note: Notes.Right },
+            { time: 6.5, hold: 0.5, note: Notes.Down },
+            { time: 7, hold: 0.5, note: Notes.Up },
+            { time: 7.5, hold: 0.5, note: Notes.Right },
+            { time: 8, hold: 0.5, note: Notes.Left },
+            { time: 9, hold: 0.5, note: Notes.Right },
+            { time: 10, hold: 0.5, note: Notes.Left },
+            { time: 10.5, hold: 0.5, note: Notes.Right },
+            { time: 11, hold: 0.5, note: Notes.Up },
+            { time: 11.5, hold: 0.5, note: Notes.Down },
+            { time: 12, hold: 2, note: Notes.Left },
+        ],
+    },
+    {
+        howl: new Howl({
+            src: level4Path,
+            volume: 0.1,
+            sprite: {
+                background: [0, 20470],
+                pattern: [20470, 18010],
+            },
+        }),
+        beatMap: [
+            { time: 4, hold: 1, note: Notes.Up },
+            { time: 5, hold: 0.5, note: Notes.Left },
+            { time: 6, hold: 0.5, note: Notes.Right },
+            { time: 6.5, hold: 0.5, note: Notes.Down },
+            { time: 7, hold: 0.25, note: Notes.Up },
+            { time: 7.25, hold: 0.25, note: Notes.Right },
+            { time: 7.5, hold: 0.5, note: Notes.Left },
+            { time: 8, hold: 1, note: Notes.Right },
+            { time: 9.5, hold: 0.25, note: Notes.Left },
+            { time: 9.75, hold: 0.25, note: Notes.Right },
+            { time: 10, hold: 0.5, note: Notes.Up },
+            { time: 10.5, hold: 0.5, note: Notes.Down },
+            { time: 11, hold: 0.5, note: Notes.Left },
+            { time: 11.5, hold: 0.25, note: Notes.Up },
+            { time: 11.75, hold: 0.25, note: Notes.Down },
+            { time: 12, hold: 2, note: Notes.Left },
+        ],
+    },
+    {
+        howl: new Howl({
+            src: level5Path,
+            volume: 0.1,
+            sprite: {
+                background: [0, 20470],
+                pattern: [20470, 18010],
+            },
+        }),
+        beatMap: [
+            { time: 4, hold: 1, note: Notes.Left },
+            { time: 5, hold: 0.25, note: Notes.Up },
+            { time: 5.25, hold: 0.25, note: Notes.Right },
+            { time: 5.5, hold: 0.5, note: Notes.Up },
+            { time: 6, hold: 0.25, note: Notes.Down },
+            { time: 6.25, hold: 0.25, note: Notes.Up },
+            { time: 6.5, hold: 0.25, note: Notes.Right },
+            { time: 6.75, hold: 0.25, note: Notes.Up },
+            { time: 7, hold: 0.25, note: Notes.Left },
+            { time: 7.25, hold: 0.25, note: Notes.Down },
+            { time: 7.5, hold: 0.5, note: Notes.Up },
+            { time: 8, hold: 0.5, note: Notes.Left },
+            { time: 9, hold: 0.5, note: Notes.Up },
+            { time: 10, hold: 0.25, note: Notes.Left },
+            { time: 10.25, hold: 0.25, note: Notes.Down },
+            { time: 10.5, hold: 0.25, note: Notes.Left },
+            { time: 10.75, hold: 0.25, note: Notes.Up },
+            { time: 11, hold: 0.25, note: Notes.Right },
+            { time: 11.25, hold: 0.25, note: Notes.Up },
+            { time: 11.5, hold: 0.25, note: Notes.Down },
+            { time: 11.75, hold: 0.25, note: Notes.Left },
+            { time: 12, hold: 1, note: Notes.Up },
+            { time: 13, hold: 0.25, note: Notes.Down },
+            { time: 13.25, hold: 0.5, note: Notes.Up },
+        ],
+    },
 ];
 
-function getSongForLevel(_level: number) {
-    return songs[0];
+function getSongForLevel(level: number) {
+    return songs[level - 1];
 }
 
 const arrowPosition = 620;
 
 export const Rhythm = ({ level }: GizmoProps) => {
-    const song = useSignal<Song>(getSongForLevel(0));
+    const song = useSignal<Song>(getSongForLevel(level.value));
     const audioPosition = useAudioPosition(song.value.howl);
     const beatMapHeight = 640 * 20;
-    song.value.howl.once("end", () => {
-        shouldBePlaying.value = false;
-        if (score.value > target.value) {
-            level.value = level.value + 1;
+    const isEnded = useSignal(false);
+    useSignalEffect(() => {
+        if (isEnded.value) {
+            shouldBePlaying.value = false;
+            if (score.value > target.value) {
+                if (level.value < 5) {
+                    level.value = level.value + 1;
+                }
+            }
+            score.value = 0;
+            isEnded.value = false;
         }
-        score.value = 0;
     });
     useSignalEffect(() => {
         song.value = getSongForLevel(level.value);
@@ -212,8 +335,17 @@ export const Rhythm = ({ level }: GizmoProps) => {
     useSignalEffect(() => {
         if (shouldBePlaying.value) {
             if (!song.value.howl.playing()) {
-                bgSoundId.value = song.value.howl.play("background");
-                patternSoundId.value = song.value.howl.play("pattern");
+                const bgId = song.value.howl.play("background");
+                bgSoundId.value = bgId;
+                const patternId = song.value.howl.play("pattern");
+                patternSoundId.value = patternId;
+                song.value.howl.once(
+                    "end",
+                    () => {
+                        isEnded.value = true;
+                    },
+                    patternId
+                );
             }
         } else {
             song.value.howl.stop();
