@@ -27,7 +27,7 @@ interface Song {
 function useAudioPosition(song: Howl) {
     const time = useGameTime();
     const audioPosition = useComputed(() => {
-        const timeValue = time.value;
+        time.value;
         return song.seek();
     });
     return audioPosition;
@@ -130,7 +130,7 @@ const songs: Song[] = [
     },
 ];
 
-function getSongForLevel(level: number) {
+function getSongForLevel(_level: number) {
     return songs[0];
 }
 
