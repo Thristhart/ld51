@@ -35,13 +35,13 @@ function useAudioPosition(song: Howl) {
 function getNotePosition(note: Notes) {
     switch (note) {
         case Notes.Left:
-            return 60;
+            return 48;
         case Notes.Down:
-            return 220;
+            return 196;
         case Notes.Up:
-            return 380;
+            return 344;
         case Notes.Right:
-            return 540;
+            return 492;
     }
 }
 const arrowWidth = 100;
@@ -104,6 +104,8 @@ const activeNoteColor = "white";
 const inactiveNoteColor = "gray";
 const beatMapNoteColor = "green";
 const beatMapNoteHoldColor = "rgb(83 141 78 / 64%)";
+const textColor = "green";
+const faceColor = "green";
 
 const scorePerSecond = 1024;
 const victoryPercentage = 0.75;
@@ -133,6 +135,8 @@ const songs: Song[] = [
 function getSongForLevel(_level: number) {
     return songs[0];
 }
+
+const arrowPosition = 620;
 
 export const Rhythm = ({ level }: GizmoProps) => {
     const song = useSignal<Song>(getSongForLevel(0));
@@ -216,126 +220,228 @@ export const Rhythm = ({ level }: GizmoProps) => {
         }
     });
 
+    const timeSinceLastNonMiss = useSignal(0);
+
     return (
-        <Canvas
-            width={640}
-            height={640}
-            tick={(canvas, context) => {
-                const dt = audioPosition.value - audioPositionRef.current;
-                audioPositionRef.current = audioPosition.value;
-                const duration = song.value.howl.duration();
-                context.clearRect(0, 0, canvas.width, canvas.height);
-                context.fillStyle = "#fc6";
-                context.font = "64px sans-serif";
-                if (audioPosition.value === 0) {
-                    context.fillText("READY TO DANCE?", 10, 320);
-                } else if (audioPosition.value < 4) {
-                    context.fillText(Math.floor(5 - audioPosition.value).toString(), 10, 320);
-                }
+        <div className="rhythm">
+            <Canvas
+                width={640}
+                height={640}
+                tick={(canvas, context) => {
+                    const dt = audioPosition.value - audioPositionRef.current;
+                    audioPositionRef.current = audioPosition.value;
+                    const duration = song.value.howl.duration();
+                    context.clearRect(0, 0, canvas.width, canvas.height);
 
-                if (leftPressed.value) {
-                    context.fillStyle = activeNoteColor;
-                } else {
-                    context.fillStyle = inactiveNoteColor;
-                }
-                drawArrow(context, Notes.Left, 640);
+                    let expression = "neutral";
+                    let accurateNotes: Notes[] = [];
+                    song.value.beatMap.forEach((beat) => {
+                        if (audioPosition.value > beat.time && audioPosition.value < beat.time + beat.hold) {
+                            let wasHit = false;
+                            if (beat.note === Notes.Left && leftPressed.value) {
+                                wasHit = true;
+                                expression = "left";
+                            }
+                            if (beat.note === Notes.Down && downPressed.value) {
+                                wasHit = true;
+                                expression = "down";
+                            }
+                            if (beat.note === Notes.Up && upPressed.value) {
+                                wasHit = true;
+                                expression = "up";
+                            }
+                            if (beat.note === Notes.Right && rightPressed.value) {
+                                wasHit = true;
+                                expression = "right";
+                            }
 
-                if (downPressed.value) {
-                    context.fillStyle = activeNoteColor;
-                } else {
-                    context.fillStyle = inactiveNoteColor;
-                }
-                drawArrow(context, Notes.Down, 640);
-
-                if (upPressed.value) {
-                    context.fillStyle = activeNoteColor;
-                } else {
-                    context.fillStyle = inactiveNoteColor;
-                }
-                drawArrow(context, Notes.Up, 640);
-
-                if (rightPressed.value) {
-                    context.fillStyle = activeNoteColor;
-                } else {
-                    context.fillStyle = inactiveNoteColor;
-                }
-                drawArrow(context, Notes.Right, 640);
-                const beatMapPosition = 640 - beatMapHeight + (audioPosition.value / duration) * beatMapHeight;
-                let accurateNotes: Notes[] = [];
-                song.value.beatMap.forEach((beat) => {
-                    const beatHeight = (beat.hold / duration) * beatMapHeight;
-                    const noteY = beatMapPosition + (beatMapHeight - (beat.time / duration) * beatMapHeight);
-                    context.fillStyle = beatMapNoteHoldColor;
-                    context.fillRect(
-                        getNotePosition(beat.note),
-                        noteY - beatHeight - arrowHeight,
-                        arrowWidth,
-                        beatHeight
-                    );
-                    context.fillStyle = beatMapNoteColor;
-                    let notePosition = noteY;
-                    if (audioPosition.value > beat.time && audioPosition.value < beat.time + beat.hold) {
-                        let wasHit = false;
-                        if (
-                            (beat.note === Notes.Left && leftPressed.value) ||
-                            (beat.note === Notes.Down && downPressed.value) ||
-                            (beat.note === Notes.Up && upPressed.value) ||
-                            (beat.note === Notes.Right && rightPressed.value)
-                        ) {
-                            wasHit = true;
+                            if (wasHit) {
+                                song.value.howl.mute(false, patternSoundId.value);
+                                accurateNotes.push(beat.note);
+                                score.value = score.peek() + scorePerSecond * dt;
+                            } else {
+                                // miss
+                                song.value.howl.mute(true, patternSoundId.value);
+                                score.value = score.peek() - scorePerSecond * dt * 0.3;
+                                expression = "miss";
+                            }
                         }
-                        if (wasHit) {
-                            notePosition = 640;
-                            song.value.howl.mute(false, patternSoundId.value);
-                            accurateNotes.push(beat.note);
-                            score.value = score.peek() + scorePerSecond * dt;
+                    });
+
+                    if (audioPosition.value > 1) {
+                        if (leftPressed.value && !accurateNotes.includes(Notes.Left)) {
+                            score.value = score.peek() - scorePerSecond * dt * 0.5;
+                            expression = "miss";
+                        }
+                        if (downPressed.value && !accurateNotes.includes(Notes.Down)) {
+                            score.value = score.peek() - scorePerSecond * dt * 0.5;
+                            expression = "miss";
+                        }
+                        if (upPressed.value && !accurateNotes.includes(Notes.Up)) {
+                            score.value = score.peek() - scorePerSecond * dt * 0.5;
+                            expression = "miss";
+                        }
+                        if (rightPressed.value && !accurateNotes.includes(Notes.Right)) {
+                            score.value = score.peek() - scorePerSecond * dt * 0.5;
+                            expression = "miss";
+                        }
+                    }
+                    if (
+                        audioPosition.value >
+                        song.value.beatMap[song.value.beatMap.length - 1].time +
+                            song.value.beatMap[song.value.beatMap.length - 1].hold +
+                            0.5
+                    ) {
+                        if (score.value >= target.value) {
+                            context.fillStyle = textColor;
+                            context.font = `48px Vector Mono`;
+                            context.fillText("YOU DID IT!", 100, 480);
                         } else {
-                            // miss
-                            song.value.howl.mute(true, patternSoundId.value);
-                            score.value = score.peek() - scorePerSecond * dt * 0.3;
+                            context.fillStyle = textColor;
+                            context.font = `48px Vector Mono`;
+                            context.fillText("OH NO!", 200, 480);
+                            expression = "miss";
                         }
                     }
-                    drawArrow(context, beat.note, notePosition);
-                });
-                if (audioPosition.value > 1) {
-                    if (leftPressed.value && !accurateNotes.includes(Notes.Left)) {
-                        score.value = score.peek() - scorePerSecond * dt * 0.5;
-                    }
-                    if (downPressed.value && !accurateNotes.includes(Notes.Down)) {
-                        score.value = score.peek() - scorePerSecond * dt * 0.5;
-                    }
-                    if (upPressed.value && !accurateNotes.includes(Notes.Up)) {
-                        score.value = score.peek() - scorePerSecond * dt * 0.5;
-                    }
-                    if (rightPressed.value && !accurateNotes.includes(Notes.Right)) {
-                        score.value = score.peek() - scorePerSecond * dt * 0.5;
-                    }
-                }
-                if (
-                    audioPosition.value >
-                    song.value.beatMap[song.value.beatMap.length - 1].time +
-                        song.value.beatMap[song.value.beatMap.length - 1].hold +
-                        0.5
-                ) {
-                    if (score.value >= target.value) {
-                        context.fillText("good work yay", 10, 320);
-                    } else {
-                        context.fillStyle = "#f00";
-                        context.fillText("RIP", 10, 320);
-                    }
-                }
 
-                context.fillStyle = "#fc6";
-                context.font = "64px sans-serif";
-                context.fillText(
-                    score.value.toFixed(0).padStart(5) + " / " + target.value.toFixed(0).padStart(5),
-                    10,
-                    100
-                );
-            }}
-            onClick={() => {
-                shouldBePlaying.value = true;
-            }}
-        />
+                    if (expression !== "miss") {
+                        timeSinceLastNonMiss.value = 0;
+                    } else {
+                        timeSinceLastNonMiss.value += dt;
+                    }
+
+                    context.fillStyle = faceColor;
+                    context.strokeStyle = faceColor;
+                    if (expression === "neutral") {
+                        context.fillRect(200, 130, 20, 80);
+                        context.fillRect(400, 130, 20, 80);
+                        context.beginPath();
+                        context.arc(310, 260, 110, 0, Math.PI);
+                        context.closePath();
+                        context.lineWidth = 20;
+                        context.stroke();
+                    } else if (expression === "left") {
+                        context.fillRect(190, 130, 20, 80);
+                        context.fillRect(390, 130, 20, 80);
+                        context.beginPath();
+                        context.arc(250, 290, 60, 0, Math.PI * 2);
+                        context.closePath();
+                        context.lineWidth = 20;
+                        context.stroke();
+                    } else if (expression === "right") {
+                        context.fillRect(210, 130, 20, 80);
+                        context.fillRect(410, 130, 20, 80);
+                        context.beginPath();
+                        context.arc(370, 290, 60, 0, Math.PI * 2);
+                        context.closePath();
+                        context.lineWidth = 20;
+                        context.stroke();
+                    } else if (expression === "up") {
+                        context.fillRect(200, 100, 20, 60);
+                        context.fillRect(400, 100, 20, 60);
+                        context.beginPath();
+                        context.arc(310, 230, 60, 0, Math.PI * 2);
+                        context.closePath();
+                        context.lineWidth = 20;
+                        context.stroke();
+                    } else if (expression === "down") {
+                        context.fillRect(200, 190, 20, 70);
+                        context.fillRect(400, 190, 20, 70);
+                        context.beginPath();
+                        context.arc(310, 370, 60, 0, Math.PI * 2);
+                        context.closePath();
+                        context.lineWidth = 20;
+                        context.stroke();
+                    } else if (expression === "miss" && timeSinceLastNonMiss.peek() > 0.2) {
+                        context.fillRect(200, 130, 20, 80);
+                        context.fillRect(400, 130, 20, 80);
+                        context.beginPath();
+                        context.arc(310, 360, 110, Math.PI, 0);
+                        context.closePath();
+                        context.lineWidth = 20;
+                        context.stroke();
+                    }
+
+                    context.fillStyle = textColor;
+                    context.font = `48px Vector Mono`;
+                    if (audioPosition.value === 0) {
+                        context.fillText("SING WITH ME?", 60, 480);
+                    } else if (audioPosition.value < 4) {
+                        context.fillText(Math.floor(5 - audioPosition.value).toString(), 280, 480);
+                    }
+
+                    if (leftPressed.value) {
+                        context.fillStyle = activeNoteColor;
+                    } else {
+                        context.fillStyle = inactiveNoteColor;
+                    }
+                    drawArrow(context, Notes.Left, arrowPosition);
+
+                    if (downPressed.value) {
+                        context.fillStyle = activeNoteColor;
+                    } else {
+                        context.fillStyle = inactiveNoteColor;
+                    }
+                    drawArrow(context, Notes.Down, arrowPosition);
+
+                    if (upPressed.value) {
+                        context.fillStyle = activeNoteColor;
+                    } else {
+                        context.fillStyle = inactiveNoteColor;
+                    }
+                    drawArrow(context, Notes.Up, arrowPosition);
+
+                    if (rightPressed.value) {
+                        context.fillStyle = activeNoteColor;
+                    } else {
+                        context.fillStyle = inactiveNoteColor;
+                    }
+                    drawArrow(context, Notes.Right, arrowPosition);
+                    const beatMapPosition =
+                        arrowPosition - beatMapHeight + (audioPosition.value / duration) * beatMapHeight;
+                    song.value.beatMap.forEach((beat) => {
+                        const beatHeight = (beat.hold / duration) * beatMapHeight;
+                        const noteY = beatMapPosition + (beatMapHeight - (beat.time / duration) * beatMapHeight);
+                        context.fillStyle = beatMapNoteHoldColor;
+                        context.fillRect(
+                            getNotePosition(beat.note),
+                            noteY - beatHeight - arrowHeight,
+                            arrowWidth,
+                            beatHeight
+                        );
+                        context.fillStyle = beatMapNoteColor;
+                        let notePosition = noteY;
+                        if (audioPosition.value > beat.time && audioPosition.value < beat.time + beat.hold) {
+                            let wasHit = false;
+                            if (
+                                (beat.note === Notes.Left && leftPressed.value) ||
+                                (beat.note === Notes.Down && downPressed.value) ||
+                                (beat.note === Notes.Up && upPressed.value) ||
+                                (beat.note === Notes.Right && rightPressed.value)
+                            ) {
+                                wasHit = true;
+                            }
+                            if (wasHit) {
+                                notePosition = arrowPosition;
+                            }
+                        }
+                        drawArrow(context, beat.note, notePosition);
+                    });
+
+                    context.fillStyle = textColor;
+                    context.font = `64px Vector Mono`;
+                    context.fillText(
+                        score.value.toFixed(0).padStart(5, " ") + "/" + target.value.toFixed(0).padStart(5, " "),
+                        12,
+                        64
+                    );
+                }}
+                onClick={() => {
+                    shouldBePlaying.value = true;
+                }}
+            />
+        </div>
     );
 };
+
+import "./Rhythm.css";

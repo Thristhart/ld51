@@ -7,7 +7,8 @@
     src: url(../assets/fonts/lantern.ttf);
 }
 .helpDialog:not([open]) {
-    display: none;
+    opacity: 0;
+    pointer-events: none;
 }
 .helpDialog {
     background-image: url(../assets/images/book.png);
@@ -15,22 +16,25 @@
     width: 80vmin;
     height: 47vmin;
 
-    position: absolute;
-    top: -20vmin;
-    left: -20vmin;
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    margin: 0;
 
     z-index: 10;
 
     border: none;
     background-color: transparent;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    column-gap: 4vmin;
 
     padding-left: 9.5vmin;
     padding-top: 4.5vmin;
-    padding-right: 4vmin;
-    padding-bottom: 4.5vmin;
+    padding-right: 8vmin;
+    padding-bottom: 7vmin;
     box-sizing: border-box;
 
     font-family: "Magic Book", serif;
