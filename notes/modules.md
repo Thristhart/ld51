@@ -70,6 +70,12 @@
 
 -   Sequence extends.
 
+## Symbols
+
+## Something Maze-y?
+
+## Venting Gas?
+
 ## A Queeez?
 
 ## Picross???
@@ -77,6 +83,24 @@
 ## Crank??
 
 ## Hopscotch??
+
+## Minigolfesqe??
+
+## Something Avoidery
+
+## Something Crafty, ala Minecraft/Candy Box.
+
+## A runner?
+
+## Tower stacker?
+
+## Can we fit a Super Hexagon omage in here?
+
+## Just the Jack-in-the-box module again
+
+## Stats panels? (APM, lvl/minute, something like that?)
+
+## Some way to complete modules outside of the normal. (Cheat step.)
 
 ## Probably not Minesweeper, that seems like a lot.
 
