@@ -59,12 +59,27 @@ const maps = [
             {
                 x: 1,
                 y: 0,
-                walls: [Directions.Right],
+                walls: [Directions.Down],
             },
             {
-                x: 1,
+                x: 2,
+                y: 0,
+                walls: [Directions.Down],
+            },
+            {
+                x: 3,
                 y: 1,
-                walls: [Directions.Right],
+                walls: [Directions.Left],
+            },
+            {
+                x: 3,
+                y: 2,
+                walls: [Directions.Left],
+            },
+            {
+                x: 2,
+                y: 3,
+                walls: [Directions.Up],
             },
             {
                 x: 1,
@@ -74,34 +89,349 @@ const maps = [
         ],
         size: { x: 4, y: 4 },
         start: { x: 0, y: 3 },
-        end: { x: 3, y: 0 },
+        end: { x: 2, y: 2 },
     },
     {
         cells: [
-            {
-                x: 0,
-                y: 2,
-                walls: [Directions.Right],
-            },
-            {
-                x: 0,
-                y: 1,
-                walls: [Directions.Right],
-            },
             {
                 x: 1,
                 y: 0,
                 walls: [Directions.Right],
             },
             {
-                x: 1,
+                x: 0,
                 y: 1,
                 walls: [Directions.Right],
+            },
+            {
+                x: 3,
+                y: 1,
+                walls: [Directions.Right, Directions.Up, Directions.Left],
+            },
+            {
+                x: 3,
+                y: 1,
+                walls: [Directions.Down],
+            },
+            {
+                x: 1,
+                y: 2,
+                walls: [Directions.Left, Directions.Up, Directions.Right],
+            },
+            {
+                x: 3,
+                y: 2,
+                walls: [Directions.Down],
+            },
+            {
+                x: 0,
+                y: 3,
+                walls: [Directions.Right, Directions.Down],
+            },
+            {
+                x: 2,
+                y: 3,
+                walls: [Directions.Left, Directions.Down, Directions.Right],
+            },
+            {
+                x: 4,
+                y: 3,
+                walls: [Directions.Down],
             },
         ],
         size: { x: 5, y: 5 },
         start: { x: 0, y: 4 },
-        end: { x: 4, y: 0 },
+        end: { x: 0, y: 3 },
+    },
+    {
+        cells: [
+            {
+                x: 0,
+                y: 1,
+                walls: [Directions.Up],
+            },
+            {
+                x: 1,
+                y: 1,
+                walls: [Directions.Up, Directions.Right, Directions.Down],
+            },
+            {
+                x: 0,
+                y: 5,
+                walls: [Directions.Down],
+            },
+            {
+                x: 1,
+                y: 5,
+                walls: [Directions.Up, Directions.Right, Directions.Down],
+            },
+            {
+                x: 1,
+                y: 2,
+                walls: [Directions.Left, Directions.Right],
+            },
+            {
+                x: 1,
+                y: 2,
+                walls: [Directions.Left, Directions.Right],
+            },
+            {
+                x: 1,
+                y: 3,
+                walls: [Directions.Left, Directions.Right],
+            },
+            {
+                x: 1,
+                y: 4,
+                walls: [Directions.Left, Directions.Right],
+            },
+            {
+                x: 4,
+                y: 5,
+                walls: [Directions.Left, Directions.Right, Directions.Up],
+            },
+            {
+                x: 4,
+                y: 6,
+                walls: [Directions.Left, Directions.Right],
+            },
+            {
+                x: 5,
+                y: 1,
+                walls: [Directions.Left, Directions.Up],
+            },
+            {
+                x: 6,
+                y: 1,
+                walls: [Directions.Up],
+            },
+            {
+                x: 5,
+                y: 2,
+                walls: [Directions.Left, Directions.Down],
+            },
+            {
+                x: 6,
+                y: 2,
+                walls: [Directions.Down],
+            },
+        ],
+        size: { x: 7, y: 7 },
+        start: { x: 0, y: 6 },
+        end: { x: 0, y: 0 },
+    },
+    {
+        cells: [
+            {
+                x: 3,
+                y: 0,
+                walls: [Directions.Left, Directions.Right, Directions.Down],
+            },
+            {
+                x: 1,
+                y: 1,
+                walls: [Directions.Left, Directions.Right, Directions.Up],
+            },
+            {
+                x: 5,
+                y: 1,
+                walls: [Directions.Left, Directions.Right, Directions.Up],
+            },
+            {
+                x: 6,
+                y: 1,
+                walls: [Directions.Up],
+            },
+
+            {
+                x: 7,
+                y: 1,
+                walls: [Directions.Right, Directions.Up],
+            },
+            {
+                x: 1,
+                y: 2,
+                walls: [Directions.Left],
+            },
+            {
+                x: 2,
+                y: 2,
+                walls: [Directions.Up],
+            },
+            {
+                x: 3,
+                y: 2,
+                walls: [Directions.Up],
+            },
+            {
+                x: 4,
+                y: 2,
+                walls: [Directions.Up],
+            },
+            {
+                x: 5,
+                y: 2,
+                walls: [Directions.Right],
+            },
+            {
+                x: 6,
+                y: 2,
+                walls: [Directions.Right],
+            },
+            {
+                x: 7,
+                y: 2,
+                walls: [Directions.Right],
+            },
+            {
+                x: 0,
+                y: 3,
+                walls: [Directions.Right],
+            },
+            {
+                x: 1,
+                y: 3,
+                walls: [Directions.Right],
+            },
+            {
+                x: 2,
+                y: 3,
+                walls: [Directions.Right],
+            },
+            {
+                x: 3,
+                y: 3,
+                walls: [Directions.Up, Directions.Down],
+            },
+            {
+                x: 4,
+                y: 3,
+                walls: [Directions.Up],
+            },
+            {
+                x: 5,
+                y: 3,
+                walls: [Directions.Up, Directions.Right],
+            },
+            {
+                x: 6,
+                y: 3,
+                walls: [Directions.Down, Directions.Right],
+            },
+            {
+                x: 7,
+                y: 3,
+                walls: [Directions.Right],
+            },
+            {
+                x: 0,
+                y: 4,
+                walls: [Directions.Right],
+            },
+            {
+                x: 4,
+                y: 4,
+                walls: [Directions.Right],
+            },
+            {
+                x: 7,
+                y: 4,
+                walls: [Directions.Right],
+            },
+            {
+                x: 1,
+                y: 5,
+                walls: [Directions.Left, Directions.Up],
+            },
+            {
+                x: 2,
+                y: 5,
+                walls: [Directions.Down, Directions.Up],
+            },
+            {
+                x: 3,
+                y: 5,
+                walls: [Directions.Down, Directions.Up],
+            },
+            {
+                x: 4,
+                y: 5,
+                walls: [Directions.Down, Directions.Right],
+            },
+            {
+                x: 5,
+                y: 5,
+                walls: [Directions.Down, Directions.Up],
+            },
+            {
+                x: 6,
+                y: 5,
+                walls: [Directions.Down, Directions.Up],
+            },
+            {
+                x: 7,
+                y: 5,
+                walls: [Directions.Down, Directions.Right],
+            },
+            {
+                x: 1,
+                y: 6,
+                walls: [Directions.Left, Directions.Right],
+            },
+            {
+                x: 6,
+                y: 6,
+                walls: [Directions.Left, Directions.Right, Directions.Down],
+            },
+            {
+                x: 1,
+                y: 7,
+                walls: [Directions.Left, Directions.Down],
+            },
+            {
+                x: 2,
+                y: 7,
+                walls: [Directions.Right, Directions.Down],
+            },
+            {
+                x: 3,
+                y: 7,
+                walls: [Directions.Up],
+            },
+            {
+                x: 4,
+                y: 7,
+                walls: [Directions.Up],
+            },
+            {
+                x: 5,
+                y: 7,
+                walls: [Directions.Left, Directions.Down],
+            },
+            {
+                x: 6,
+                y: 7,
+                walls: [Directions.Down],
+            },
+            {
+                x: 7,
+                y: 7,
+                walls: [Directions.Down, Directions.Right],
+            },
+            {
+                x: 0,
+                y: 8,
+                walls: [Directions.Right],
+            },
+            {
+                x: 3,
+                y: 8,
+                walls: [Directions.Right],
+            },
+        ],
+        size: { x: 9, y: 9 },
+        start: { x: 4, y: 4 },
+        end: { x: 0, y: 8 },
     },
 ];
 
