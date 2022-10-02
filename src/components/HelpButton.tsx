@@ -8,17 +8,22 @@ interface HelpButtonProps {
 }
 export const HelpButton = ({ children }: HelpButtonProps) => {
     const showingHelp = useSignal(false);
+    const buttonPosition = useSignal<{ x: number; y: number } | undefined>(undefined);
 
     return (
         <>
             <button
                 class="helpButton"
-                onClick={() => {
+                onClick={(e) => {
                     showingHelp.value = !showingHelp.value;
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    buttonPosition.value = { x: rect.left, y: rect.top };
                 }}>
                 ?
             </button>
-            <HelpDialog open={showingHelp}>{children}</HelpDialog>
+            <HelpDialog open={showingHelp} buttonPosition={buttonPosition}>
+                {children}
+            </HelpDialog>
         </>
     );
 };

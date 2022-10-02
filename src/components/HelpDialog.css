@@ -7,7 +7,8 @@
     src: url(../assets/fonts/lantern.ttf);
 }
 .helpDialog:not([open]) {
-    display: none;
+    opacity: 0;
+    pointer-events: none;
 }
 .helpDialog {
     background-image: url(../assets/images/book.png);
@@ -15,9 +16,11 @@
     width: 80vmin;
     height: 47vmin;
 
-    position: absolute;
-    top: -20vmin;
-    left: -20vmin;
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    margin: 0;
 
     z-index: 10;
 
