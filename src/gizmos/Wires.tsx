@@ -124,6 +124,18 @@ function getRightWire(element: Element) {
 
 const colors = ["yellow", "green", "red", "blue", "black"] as const;
 
+import { Howl } from "howler";
+import shock1 from "~/assets/audio/shock_1.ogg";
+import shock2 from "~/assets/audio/shock_2.ogg";
+import shock3 from "~/assets/audio/shock_3.ogg";
+import shock4 from "~/assets/audio/shock_4.ogg";
+const shockSounds = [
+    new Howl({ src: shock1, volume: 0.1 }),
+    new Howl({ src: shock2, volume: 0.1 }),
+    new Howl({ src: shock3, volume: 0.1 }),
+    new Howl({ src: shock4, volume: 0.1 }),
+];
+
 const AmongUsWires = ({ level }: GizmoProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const wireCount = useSignal(level.value);
@@ -217,6 +229,7 @@ const AmongUsWires = ({ level }: GizmoProps) => {
                         },
                         ...connections.value,
                     ];
+                    shockSounds[Math.floor(Math.random() * shockSounds.length)].play();
                 }
                 wireDrag.value = undefined;
             }}>
@@ -469,7 +482,6 @@ interface KeepTalkingWire {
     isCut: boolean;
 }
 
-import { Howl } from "howler";
 import explosionSoundPath from "~/assets/audio/explosion.ogg";
 const explosionSound = new Howl({
     src: [explosionSoundPath],
