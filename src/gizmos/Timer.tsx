@@ -1,4 +1,18 @@
 import { useSignal } from "@preact/signals";
+import { useEffect, useRef } from "preact/hooks";
+import {
+    CameraHelper,
+    DirectionalLight,
+    Group,
+    HemisphereLight,
+    PCFSoftShadowMap,
+    PerspectiveCamera,
+    Scene,
+    sRGBEncoding,
+    WebGLRenderer,
+} from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import sundialGlbPath from "~/assets/models/sundial.glb";
 import { Canvas } from "~/components/Canvas";
 import { TEN_SECONDS } from "~/constants";
 import { useGameTime } from "~/Game";
@@ -111,6 +125,85 @@ const Hourglass = () => {
     );
 };
 
+const Sundial = () => {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const threeState = useRef<{
+        scene: Scene;
+        camera: PerspectiveCamera;
+        renderer: WebGLRenderer;
+        dial?: Group;
+    }>();
+
+    useEffect(() => {
+        if (!canvasRef.current) {
+            return;
+        }
+        const scene = new Scene();
+        const camera = new PerspectiveCamera(75, canvasRef.current.width / canvasRef.current.height, 0.1, 1000);
+
+        const renderer = new WebGLRenderer({ canvas: canvasRef.current, alpha: true });
+
+        renderer.physicallyCorrectLights = true;
+        renderer.outputEncoding = sRGBEncoding;
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = PCFSoftShadowMap; // default THREE.PCFShadowMap
+
+        const hemiLight = new HemisphereLight();
+        hemiLight.name = "hemi_light";
+        // scene.add(hemiLight);
+
+        const light = new DirectionalLight(0xffffff, 1);
+        light.position.set(0, 1, 0); //default; light shining from top
+        light.castShadow = true; // default false
+        scene.add(light);
+        const helper = new CameraHelper(light.shadow.camera);
+        scene.add(helper);
+
+        camera.position.z = 1;
+        camera.position.y = 1.5;
+        camera.position.x = 0.1;
+
+        const loader = new GLTFLoader();
+        loader.load(
+            sundialGlbPath,
+            function (gltf) {
+                scene.add(gltf.scene);
+                threeState.current!.dial = gltf.scene;
+                gltf.scene.castShadow = true;
+                gltf.scene.receiveShadow = true;
+
+                camera.lookAt(gltf.scene.position);
+                light.lookAt(gltf.scene.position);
+            },
+            undefined,
+            function (error) {
+                console.error(error);
+            }
+        );
+
+        threeState.current = { scene, camera, renderer };
+    }, []);
+
+    const time = useGameTime();
+
+    return (
+        <Canvas
+            width={640}
+            height={640}
+            canvasRef={canvasRef}
+            disableContext={true}
+            tick={() => {
+                time.value;
+                if (!threeState.current) {
+                    return;
+                }
+                const { scene, camera, renderer, dial } = threeState.current;
+                renderer.render(scene, camera);
+            }}
+        />
+    );
+};
+
 export const Timer = () => {
-    return <Hourglass />;
+    return <Sundial />;
 };

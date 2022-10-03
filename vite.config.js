@@ -10,4 +10,5 @@ export default {
     },
     base: "/ld51/",
     plugins: [preact({ devtoolsInProd: true }), mdx()],
+    assetsInclude: ["**/*.glb"],
 };
