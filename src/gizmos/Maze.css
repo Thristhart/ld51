@@ -1,32 +1,44 @@
+.mazeGizmo {
+    padding: 3vmin;
+    background-color: #0d1117;
+}
 .mazeGizmo > canvas {
     width: 100%;
     height: 100%;
 }
 
-.directionbutton{
+.directionbutton {
     border: none;
+    font-size: 2vmin;
+    background: none;
+    user-select: none;
+    color: cornflowerblue;
 }
 
 .rightButton {
-    position:absolute;
-    right: 0%;
-    top: 50%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
 }
 
 .leftButton {
-    position:absolute;
-    left: 0%;
-    top: 50%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
 }
 
 .upButton {
-    position:absolute;
-    left: 45%;
-    top: 0%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
 }
 
 .downButton {
-    position:absolute;
-    left: 45%;
-    bottom: 0%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
 }

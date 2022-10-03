@@ -1,14 +1,17 @@
-import { useSignal, useSignalEffect } from "@preact/signals";
-import { HelpButton } from "~/components/HelpButton";
+import { useComputed, useSignal, useSignalEffect } from "@preact/signals";
 import { GizmoProps } from "~/Game";
 import "./Button.css";
-import ButtonHelp from "./ButtonHelp.mdx";
 import { useWireOtherGizmoContext } from "./Wires";
+
+function getClicksForLevel(level: number) {
+    return 3 ** (level - 1);
+}
 
 export const Button = ({ level }: GizmoProps) => {
     const clicks = useSignal(0);
+    const targetClicks = useComputed(() => getClicksForLevel(level.value));
     useSignalEffect(() => {
-        if (clicks.value >= Math.pow(10, level.peek() - 1)) {
+        if (clicks.value >= targetClicks.value) {
             level.value = level.peek() + 1;
             clicks.value = 0;
         }
@@ -20,15 +23,13 @@ export const Button = ({ level }: GizmoProps) => {
 
     return (
         <div class="bigRedButton">
-            <HelpButton>
-                <ButtonHelp />
-            </HelpButton>
             <button
                 class="buttonGizmo"
                 onClick={() => {
                     clicks.value++;
-                }}>
-                {clicks} / {level}
+                }}
+                style={{ "--target": targetClicks.value, "--clicks": clicks.value }}>
+                {targetClicks.value > 1 && clicks}
             </button>
         </div>
     );

@@ -438,6 +438,9 @@ const maps = [
 const canvasWidth = 640;
 const canvasHeight = 640;
 
+const gridStrokeStyle = "#214990";
+const mazeWallStrokeStyle = "#909caf";
+
 function drawMaze(
     context: CanvasRenderingContext2D,
     cells: { x: number; y: number; walls: Directions[] }[],
@@ -445,15 +448,13 @@ function drawMaze(
     playerPosition: { x: number; y: number },
     goalPosition: { x: number; y: number }
 ) {
+    context.clearRect(0, 0, canvasWidth, canvasHeight);
     const xCellSize = Math.floor(canvasWidth / size.x);
     const yCellSize = Math.floor(canvasHeight / size.y);
-    //drawBG
-    context.fillStyle = "white";
-    context.fillRect(0, 0, canvasWidth, canvasHeight);
-
     //drawGrid
     context.lineWidth = 5;
-    context.strokeStyle = "black";
+    context.strokeStyle = gridStrokeStyle;
+    context.lineCap = "square";
     for (let xPos = 0; xPos <= size.x; xPos++) {
         context.beginPath();
         context.moveTo(xPos * xCellSize, 0);
@@ -493,7 +494,8 @@ function drawMaze(
             }
             context.beginPath();
             context.moveTo(start!.x, start!.y);
-            context.strokeStyle = "black";
+            context.strokeStyle = mazeWallStrokeStyle;
+            context.lineCap = "round";
             context.lineWidth = 20;
             context.lineTo(end!.x, end!.y);
             context.closePath();
@@ -657,28 +659,28 @@ export const Maze = ({ level }: GizmoProps) => {
                 onClick={() => {
                     direction.value = Directions.Up;
                 }}>
-                ⌃
+                ▲
             </button>
             <button
                 class="rightButton directionbutton"
                 onClick={() => {
                     direction.value = Directions.Right;
                 }}>
-                ›
+                ▶
             </button>
             <button
                 class="downButton directionbutton"
                 onClick={() => {
                     direction.value = Directions.Down;
                 }}>
-                ⌄
+                ▼
             </button>
             <button
                 class="leftButton directionbutton"
                 onClick={() => {
                     direction.value = Directions.Left;
                 }}>
-                ‹
+                ◀
             </button>
             <Canvas
                 width={640}
