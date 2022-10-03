@@ -32,7 +32,7 @@ export const Button = ({ level, completed }: GizmoProps) => {
                 class="buttonGizmo"
                 onClick={() => {
                     if (completed.value) {
-                        return true;
+                        return;
                     }
                     clicks.value++;
                 }}
