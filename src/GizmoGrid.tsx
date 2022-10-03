@@ -1,7 +1,9 @@
 import { signal, useSignal, useSignalEffect } from "@preact/signals";
+import { useMemo } from "preact/hooks";
 import { Gizmo, useGameTimeSeconds, useGizmoList } from "~/Game";
 import { useLevelUpSound } from "./components/AudioContext";
 import "./GizmoGrid.css";
+import { WireOtherGizmoContext } from "./gizmos/Wires";
 import { Wordle } from "./gizmos/Wordle";
 
 interface GizmoWrapperProps {
@@ -33,9 +35,19 @@ export const GizmoGrid = () => {
 
     return (
         <div class="gizmoGrid">
-            {gizmos.value.map((gizmo, index) => {
-                return <GizmoWrapper key={index} gizmo={gizmo} />;
-            })}
+            <WireOtherGizmoContext.Provider
+                value={useMemo(
+                    () => ({
+                        wordleWord: "",
+                        minesweeperCorner: false,
+                        buttonNumber: 0,
+                    }),
+                    []
+                )}>
+                {gizmos.value.map((gizmo, index) => {
+                    return <GizmoWrapper key={index} gizmo={gizmo} />;
+                })}
+            </WireOtherGizmoContext.Provider>
         </div>
     );
 };

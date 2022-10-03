@@ -18,6 +18,7 @@ export interface GizmoProps {
 export interface Gizmo {
     readonly Component: FunctionComponent<GizmoProps>;
     readonly level: Signal<number>;
+    readonly id: string;
 }
 
 let lastTick = performance.now();
@@ -38,14 +39,14 @@ interface GameState {
 const GameStateContext = createContext<GameState | null>(null);
 const GameStateProvider = ({ children }: { children: ComponentChildren }) => {
     const gizmos = useSignal<Gizmo[]>([
-        { Component: Timer, level: signal(5) },
-        { Component: Numbers, level: signal(1) },
-        { Component: Button, level: signal(1) },
-        { Component: Wordle, level: signal(1) },
-        { Component: Wires, level: signal(6) },
-        { Component: Rhythm, level: signal(1) },
-        { Component: Maze, level: signal(1) },
-        { Component: Minesweeper, level: signal(1) },
+        { Component: Timer, level: signal(5), id: "timer" },
+        { Component: Numbers, level: signal(1), id: "numbers" },
+        { Component: Button, level: signal(1), id: "button" },
+        { Component: Wordle, level: signal(1), id: "wordle" },
+        { Component: Wires, level: signal(6), id: "wires" },
+        { Component: Rhythm, level: signal(1), id: "rhythm" },
+        { Component: Maze, level: signal(1), id: "maze" },
+        { Component: Minesweeper, level: signal(1), id: "minesweeper" },
     ]);
 
     return <GameStateContext.Provider value={useState({ gizmos, gameTime })[0]}>{children}</GameStateContext.Provider>;
