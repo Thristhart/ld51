@@ -60,9 +60,7 @@ const GizmoWrapper = ({ gizmo, completedCount }: GizmoWrapperProps) => {
     const previousLevel = useSignal(level.peek());
     const levelUpSound = useLevelUpSound();
     useSignalEffect(() => {
-        console.log("getSignal", level.value, previousLevel.peek(), gizmo.id);
         if (level.value > previousLevel.peek() && gizmo.id !== "timer") {
-            console.log("playSound");
             levelUpSound.play();
         }
         previousLevel.value = level.peek();
