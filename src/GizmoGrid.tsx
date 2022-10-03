@@ -1,18 +1,55 @@
-import { Signal, useSignal, useSignalEffect } from "@preact/signals";
+import { signal, Signal, useSignal, useSignalEffect } from "@preact/signals";
 import { Howl } from "howler";
 import { useMemo } from "preact/hooks";
 import { Gizmo, useGameTimeSeconds, useGizmoList } from "~/Game";
 import { useLevelUpSound } from "./components/AudioContext";
 import "./GizmoGrid.css";
-import { WireOtherGizmoContext } from "./gizmos/Wires";
+import { WireOtherGizmoContext, Wires } from "./gizmos/Wires";
 
 import classNames from "classnames";
 import yaySoundPath from "~/assets/audio/yay.mp3";
+import { Button } from "./gizmos/Button";
+import { Maze } from "./gizmos/Maze";
+import { Minesweeper } from "./gizmos/Minesweeper";
+import { Numbers } from "./gizmos/Numbers";
+import { Rhythm } from "./gizmos/Rhythm";
+import { Wordle } from "./gizmos/Wordle";
 const yaySound = new Howl({ src: yaySoundPath, volume: 0.4 });
 interface GizmoWrapperProps {
     readonly gizmo: Gizmo;
     readonly completedCount: Signal<number>;
 }
+
+const moduleOrder = [
+    {
+        component: Button,
+        id: "button",
+    },
+    {
+        component: Numbers,
+        id: "numbers",
+    },
+    {
+        component: Wordle,
+        id: "wordle",
+    },
+    {
+        component: Maze,
+        id: "maze",
+    },
+    {
+        component: Rhythm,
+        id: "rhythm",
+    },
+    {
+        component: Wires,
+        id: "wires",
+    },
+    {
+        component: Minesweeper,
+        id: "minesweeper",
+    },
+];
 const GizmoWrapper = ({ gizmo, completedCount }: GizmoWrapperProps) => {
     const { Component, level } = gizmo;
     const previousLevel = useSignal(level.peek());
@@ -38,11 +75,12 @@ export const GizmoGrid = () => {
 
     const gameTimeSeconds = useGameTimeSeconds();
 
-    // useSignalEffect(() => {
-    //     if (gameTimeSeconds.value / 10 >= gizmos.value.length && gizmos.value.length < 9) {
-    //         gizmos.value = [...gizmos.value, { Component: Wordle, level: signal(1), id: "wordle" }];
-    //     }
-    // });
+    useSignalEffect(() => {
+        if (gameTimeSeconds.value / 10 >= gizmos.value.length && gizmos.value.length < 9) {
+            const nextModule = moduleOrder.splice(0, 1)[0];
+            gizmos.value = [...gizmos.value, { Component: nextModule.component, level: signal(1), id: nextModule.id }];
+        }
+    });
 
     const completedCount = useSignal(0);
 
