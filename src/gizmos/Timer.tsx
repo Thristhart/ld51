@@ -20,7 +20,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import sundialGlbPath from "~/assets/models/sundial.glb";
 import { Canvas } from "~/components/Canvas";
 import { TEN_SECONDS } from "~/constants";
-import { GizmoProps, useGameTime } from "~/Game";
+import { GizmoProps, useGameTime, useGameTimeSeconds } from "~/Game";
 import "./Timer.css";
 
 const hourglassPolygon = [
@@ -258,9 +258,72 @@ const Sundial = () => {
     );
 };
 
+const Analog = () => {
+    const time = useGameTimeSeconds();
+
+    const clockNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+    return (
+        <Canvas
+            class=""
+            width={640}
+            height={640}
+            tick={(canvas, context) => {
+                // Background
+                context.fillStyle = "#1e2021";
+                context.fillRect(0, 0, canvas.width, canvas.height);
+                context.fillStyle = "white";
+                context.strokeStyle = "black";
+                context.lineWidth = 10;
+                context.beginPath();
+                context.arc(canvas.width / 2, canvas.height / 2, canvas.width * 0.48, 0, Math.PI * 2);
+                context.fill();
+                context.stroke();
+                context.closePath();
+                // Numbers
+                const fontSize = 40;
+                context.fillStyle = "black";
+                context.font = fontSize + "px Lantern";
+                const clockInnerRadius = canvas.width * 0.38;
+                clockNumbers.forEach((num, i) => {
+                    let angle = (Math.PI * 2 * i) / clockNumbers.length - (3 / 10) * Math.PI;
+                    let x = canvas.width / 2 + Math.cos(angle) * clockInnerRadius;
+                    let y = canvas.height / 2 + Math.sin(angle) * clockInnerRadius;
+                    let text = context.measureText(num.toString());
+                    context.fillText(num.toString(), x - 0.5 * text.width, y + 0.5 * fontSize);
+                });
+                // Hand
+                let angle = (Math.PI * 2 * time.value) / clockNumbers.length - 0.5 * Math.PI;
+                let widthSequence = [10, 9, 8, 7, 6, 5, 4];
+                let lastX = canvas.width / 2;
+                let lastY = canvas.height / 2;
+                for (let p = 0; p < widthSequence.length; p++) {
+                    context.beginPath();
+                    context.moveTo(lastX, lastY);
+
+                    let x = canvas.width / 2 + Math.cos(angle) * (clockInnerRadius * ((p + 1) / widthSequence.length));
+                    let y = canvas.height / 2 + Math.sin(angle) * (clockInnerRadius * ((p + 1) / widthSequence.length));
+                    context.lineWidth = widthSequence[p];
+                    context.lineTo(x, y);
+                    context.stroke();
+                    lastX = x;
+                    lastY = y;
+                }
+                context.closePath();
+            }}
+        />
+    );
+};
+
 export const Timer = ({ level }: GizmoProps) => {
-    if (level.value > 1) {
+    if (level.value === 1) {
+        return <Hourglass />;
+    }
+    if (level.value === 2) {
         return <Sundial />;
+    }
+    if (level.value === 3) {
+        return <Analog />;
     }
     return <Hourglass />;
 };
