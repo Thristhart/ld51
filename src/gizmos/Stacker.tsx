@@ -93,7 +93,7 @@ export const Stacker = ({ level, completed }: GizmoProps) => {
                     }
                     if (currentRow.value < 0) {
                         currentRow.value = gridSize - 1;
-                        if (level.value === 1) {
+                        if (level.value === 5) {
                             completed.value = true;
                             return;
                         }
