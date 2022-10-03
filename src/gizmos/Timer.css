@@ -5,3 +5,7 @@
 .timer.sundial {
     padding: 0;
 }
+.timer .hourglass {
+    height: 100%;
+    width: 100%;
+}

@@ -19,7 +19,8 @@ const GizmoWrapper = ({ gizmo }: GizmoWrapperProps) => {
         }
         previousLevel.value = level.peek();
     });
-    return <Component level={level} />;
+    const completed = useSignal(false);
+    return <Component level={level} completed={completed} />;
 };
 
 export const GizmoGrid = () => {

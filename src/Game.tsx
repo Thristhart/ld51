@@ -14,6 +14,7 @@ import { Wordle } from "./gizmos/Wordle";
 
 export interface GizmoProps {
     readonly level: Signal<number>;
+    readonly completed: Signal<boolean>;
 }
 export interface Gizmo {
     readonly Component: FunctionComponent<GizmoProps>;

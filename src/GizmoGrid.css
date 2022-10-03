@@ -5,6 +5,8 @@
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
     background-color: #0d1117;
+    background-image: url(./assets/images/win_photo.jpg);
+    background-size: 100%;
 }
 
 .gizmoGrid > * {
@@ -14,6 +16,7 @@
 
     padding: 2vmin;
     position: relative;
+    background-color: #0d1117;
 }
 
 .gizmoGrid > *:nth-child(1) {
@@ -51,4 +54,21 @@
 .gizmoGrid > *:nth-child(9) {
     grid-column: 1;
     grid-row: 1;
+}
+
+.completed {
+    animation: completed 1s ease-in-out forwards;
+}
+@keyframes completed {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
 }

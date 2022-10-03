@@ -50,23 +50,40 @@ const sounds = [
     new Howl({ src: numbers16, volume: 0.4 }),
 ];
 const wrongNumber = new Howl({ src: wrongNumberPath, volume: 0.3 });
-
 const gridID = signal(0);
 
-function drawGrid(size: number[], nextValue: Signal<number>, resetGrid: () => void) {
+const getGridNumbers = (size: number[]) => {
     const count = size[0] * size[1];
     const availableValues = Array.from({ length: count }, (_, index) => index);
-    const buttons = [];
+    const numbers = [];
     for (let i = 0; i < count; i++) {
-        const cellValue =
+        numbers.push(
             availableValues.splice(availableValues.indexOf(Math.floor(Math.random() * availableValues.length)), 1)[0] +
-            1;
+                1
+        );
+    }
+    return numbers;
+};
+
+interface GridProps {
+    size: number[];
+    numbers: number[];
+    nextValue: Signal<number>;
+    resetGrid: () => void;
+    completed: Signal<boolean>;
+}
+function Grid({ size, numbers, nextValue, resetGrid, completed }: GridProps) {
+    const buttons = [];
+    for (const cellValue of numbers) {
         buttons.push(
             <NumberButton className="numberButton" nextValue={nextValue} value={cellValue} resetGrid={resetGrid} />
         );
     }
     return (
-        <div class="numberGizmo" key={gridID.value} style={{ "--column-count": size[0], "--row-count": size[1] }}>
+        <div
+            class={cn("numberGizmo", completed.value && "completed")}
+            key={gridID.value}
+            style={{ "--column-count": size[0], "--row-count": size[1] }}>
             {buttons}
         </div>
     );
@@ -99,23 +116,23 @@ export const NumberButton = ({ className, value, nextValue, resetGrid }: NumberB
     );
 };
 
-export const Numbers = ({ level }: GizmoProps) => {
+export const Numbers = ({ level, completed }: GizmoProps) => {
     function resetGrid() {
         gridID.value++;
         nextValue.value = 1;
-        gridSignal.value = drawGrid(size.value, nextValue, resetGrid);
+        gridSignal.value = getGridNumbers(size.value);
     }
 
     const nextValue = useSignal(1);
     const size = useSignal(sizes[0]);
-    let grid = useMemo(() => drawGrid(size.value, nextValue, resetGrid), []);
-    const gridSignal = useSignal(grid);
+    const gridMemo = useMemo(() => getGridNumbers(size.value), []);
+    const gridSignal = useSignal<number[]>(gridMemo);
     useSignalEffect(() => {
         if (nextValue.value > size.value[0] * size.value[1]) {
             level.value = level.peek() + 1;
             const nextSize = sizes[level.value - 1];
             if (nextSize === undefined) {
-                // you win
+                completed.value = true;
                 return;
             }
             size.value = nextSize;
@@ -123,5 +140,13 @@ export const Numbers = ({ level }: GizmoProps) => {
         }
     });
 
-    return gridSignal.value;
+    return (
+        <Grid
+            numbers={gridSignal.value}
+            size={size.value}
+            nextValue={nextValue}
+            resetGrid={resetGrid}
+            completed={completed}
+        />
+    );
 };
