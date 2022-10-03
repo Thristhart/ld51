@@ -9,3 +9,9 @@
     height: 100%;
     width: 100%;
 }
+.analogTimer {
+    padding: 0;
+}
+.digitalTimer {
+    padding: 0;
+}
