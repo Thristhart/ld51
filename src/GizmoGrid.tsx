@@ -119,7 +119,7 @@ export const GizmoGrid = () => {
                     []
                 )}>
                 {gizmos.value.map((gizmo, index) => {
-                    return <GizmoWrapper key={index} gizmo={gizmo} completedCount={completedCount} />;
+                    return <GizmoWrapper key={`${gizmo.id}${index}`} gizmo={gizmo} completedCount={completedCount} />;
                 })}
             </WireOtherGizmoContext.Provider>
         </div>
