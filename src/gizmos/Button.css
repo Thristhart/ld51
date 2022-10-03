@@ -7,7 +7,7 @@
     background: red;
 
     color: white;
-    font-size: 3vmin;
+    font-size: 5vmin;
 
     width: 100%;
     height: 100%;
@@ -15,4 +15,9 @@
 .buttonGizmo:active {
     box-shadow: 0 0 0.3em rgb(1 1 1 / 30%);
     transform: translateY(0.3em);
+}
+.buttonGizmo {
+    background-image: linear-gradient(red, red), linear-gradient(rgb(117, 0, 0), rgb(117, 0, 0));
+    background-size: 100% calc(100% - var(--clicks) / var(--target) * 100%), 100%;
+    background-repeat: no-repeat;
 }
