@@ -39,7 +39,7 @@ export const Stacker = ({ level, completed }: GizmoProps) => {
         <Canvas
             width={640}
             height={640}
-            class={classNames("stacker", completed.peek() && "completed")}
+            class={classNames("stacker", completed.value && "completed")}
             tick={(canvas, context) => {
                 const totalDuration = scanDuration.value * 2;
                 let period = time.value % totalDuration;
@@ -93,7 +93,7 @@ export const Stacker = ({ level, completed }: GizmoProps) => {
                     }
                     if (currentRow.value < 0) {
                         currentRow.value = gridSize - 1;
-                        if (level.value === 5) {
+                        if (level.value === 1) {
                             completed.value = true;
                             return;
                         }
