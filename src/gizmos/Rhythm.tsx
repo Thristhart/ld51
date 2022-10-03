@@ -112,7 +112,7 @@ const textColor = "green";
 const faceColor = "green";
 
 const scorePerSecond = 1024;
-const victoryPercentage = 0.65;
+const victoryPercentage = 0.75;
 
 const songs: Song[] = [
     {
@@ -257,7 +257,9 @@ const arrowPosition = 620;
 
 const hitFudge = 0.1;
 
-export const Rhythm = ({ level }: GizmoProps) => {
+import cn from "classnames";
+
+export const Rhythm = ({ level, completed }: GizmoProps) => {
     const song = useSignal<Song>(getSongForLevel(level.value));
     const audioPosition = useAudioPosition(song.value.howl);
     const beatMapHeight = 640 * 20;
@@ -268,6 +270,9 @@ export const Rhythm = ({ level }: GizmoProps) => {
             if (score.value > target.value) {
                 if (level.value < 5) {
                     level.value = level.value + 1;
+                } else {
+                    completed.value = true;
+                    return;
                 }
             }
             score.value = 0;
@@ -357,7 +362,7 @@ export const Rhythm = ({ level }: GizmoProps) => {
     const timeSinceLastNonMiss = useSignal(0);
 
     return (
-        <div className="rhythm">
+        <div className={cn("rhythm", completed.value && "completed")}>
             <Canvas
                 width={640}
                 height={640}

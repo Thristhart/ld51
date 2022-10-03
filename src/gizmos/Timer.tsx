@@ -384,7 +384,7 @@ export const Timer = ({ level }: GizmoProps) => {
     if (level.value === 3) {
         return <Analog />;
     }
-    if (level.value === 4 || level.value === 5) {
+    if (level.value >= 4) {
         return <Digital />;
     }
     return <Hourglass />;

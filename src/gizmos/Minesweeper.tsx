@@ -1,4 +1,5 @@
 import { signal, Signal, useComputed, useSignal, useSignalEffect } from "@preact/signals";
+import classNames from "classnames";
 import { useMemo } from "preact/hooks";
 import { HelpButton } from "~/components/HelpButton";
 import { GizmoProps } from "~/Game";
@@ -260,7 +261,7 @@ enum GameState {
     Won = "won",
 }
 
-export const Minesweeper = ({ level }: GizmoProps) => {
+export const Minesweeper = ({ level, completed }: GizmoProps) => {
     const initialGrid = useMemo(generateGrid, []);
     const grid = useSignal(initialGrid);
     const gameState = useSignal(GameState.Pending);
@@ -298,6 +299,10 @@ export const Minesweeper = ({ level }: GizmoProps) => {
     useSignalEffect(() => {
         if (gameState.value === GameState.Won) {
             setTimeout(() => {
+                if (level.value >= 5) {
+                    completed.value = true;
+                    return;
+                }
                 level.value = level.peek() + 1;
                 gameState.value = GameState.Pending;
             }, 2000);
@@ -322,7 +327,7 @@ export const Minesweeper = ({ level }: GizmoProps) => {
     });
 
     return (
-        <div class="minesweeper">
+        <div class={classNames("minesweeper", completed.value && "completed")}>
             <FaceButton gameState={gameState} />
             <Digits grid={grid.value} gameState={gameState} mineCount={mineCount} />
             <HelpButton>

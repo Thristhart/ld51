@@ -5,8 +5,11 @@
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
     background-color: #0d1117;
-    background-image: url(./assets/images/win_photo.jpg);
+    background-image: url(./assets/images/pre_win_photo.png);
     background-size: 100%;
+}
+.gizmoGrid.win {
+    background-image: url(./assets/images/win_photo.jpg);
 }
 
 .gizmoGrid > * {

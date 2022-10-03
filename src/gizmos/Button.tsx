@@ -31,6 +31,9 @@ export const Button = ({ level, completed }: GizmoProps) => {
             <button
                 class="buttonGizmo"
                 onClick={() => {
+                    if (completed.value) {
+                        return true;
+                    }
                     clicks.value++;
                 }}
                 style={{ "--target": targetClicks.value, "--clicks": clicks.value }}>

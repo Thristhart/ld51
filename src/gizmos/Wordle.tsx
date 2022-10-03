@@ -88,7 +88,7 @@ const Guess = ({ guess, word, isInput, isInvalid }: GuessProps) => {
     );
 };
 
-export const Wordle = ({ level }: GizmoProps) => {
+export const Wordle = ({ level, completed }: GizmoProps) => {
     let result = useMemo(() => getRandomAnswer(level), []);
     const word = useSignal(result.word);
     const guess = useSignal("");
@@ -135,8 +135,12 @@ export const Wordle = ({ level }: GizmoProps) => {
             return;
         }
         if (guesses.value.includes(word.value)) {
-            level.value += 1;
-            hasEnded.value = 2;
+            if (level.value === 5) {
+                completed.value = true;
+            } else {
+                level.value += 1;
+                hasEnded.value = 2;
+            }
         }
         if (guesses.value.length === 5) {
             hasEnded.value = 1;
@@ -150,7 +154,7 @@ export const Wordle = ({ level }: GizmoProps) => {
                     guess.value = "";
                     hasEnded.value = false;
                 } else {
-                    //You Win!
+                    completed.value = true;
                 }
             }, 2000);
         }
@@ -162,7 +166,13 @@ export const Wordle = ({ level }: GizmoProps) => {
     });
 
     return (
-        <div class={cn("wordle", hasEnded.value && "ended", hasEnded.value === 2 && "correct")}>
+        <div
+            class={cn(
+                "wordle",
+                hasEnded.value && "ended",
+                hasEnded.value === 2 && "correct",
+                completed.value && "completed"
+            )}>
             {guesses.value.map((guess, index) => {
                 return <Guess guess={guess} word={word} key={index} />;
             })}

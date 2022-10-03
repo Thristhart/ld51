@@ -1,4 +1,5 @@
 import { Signal, useSignal, useSignalEffect } from "@preact/signals";
+import classNames from "classnames";
 import { Canvas } from "~/components/Canvas";
 import { GizmoProps } from "~/Game";
 import "./Maze.css";
@@ -614,7 +615,7 @@ function canPlayerGo(
     return true;
 }
 
-export const Maze = ({ level }: GizmoProps) => {
+export const Maze = ({ level, completed }: GizmoProps) => {
     const maze = useSignal(maps[level.value]);
     const cells = useSignal(maze.value!.cells);
     const size = useSignal(maze.value!.size);
@@ -640,6 +641,10 @@ export const Maze = ({ level }: GizmoProps) => {
                         break;
                 }
                 if (playerPosition.value.x == goalPosition.value.x && playerPosition.value.y == goalPosition.value.y) {
+                    if (level.value >= maps.length - 1) {
+                        completed.value = true;
+                        return;
+                    }
                     level.value += 1;
                     maze.value = maps[level.value];
                     cells.value = maze.value!.cells;
@@ -653,7 +658,7 @@ export const Maze = ({ level }: GizmoProps) => {
     });
 
     return (
-        <div class="mazeGizmo">
+        <div class={classNames("mazeGizmo", completed.value && "completed")}>
             <button
                 class="upButton directionbutton"
                 onClick={() => {

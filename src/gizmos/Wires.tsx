@@ -157,15 +157,13 @@ const AmongUsWires = ({ level }: GizmoProps) => {
 
     useSignalEffect(() => {
         if (connections.value.length >= wireCount.value) {
-            if (level.peek() >= 5) {
-                // you win
-                return;
-            }
             level.value = level.peek() + 1;
-            setTimeout(() => {
-                wireCount.value++;
-                connections.value = [];
-            }, 2000);
+            if (level.peek() < 6) {
+                setTimeout(() => {
+                    wireCount.value++;
+                    connections.value = [];
+                }, 2000);
+            }
         }
     });
 
@@ -478,7 +476,7 @@ const explosionSound = new Howl({
     volume: 0.1,
 });
 
-const KeepTalkingWires = ({ level }: GizmoProps) => {
+const KeepTalkingWires = ({ level, completed }: GizmoProps) => {
     const time = useGameTime();
     const cursorPosition = useSignal([0, 0]);
     const wires = useSignal<KeepTalkingWire[]>([]);
@@ -507,7 +505,7 @@ const KeepTalkingWires = ({ level }: GizmoProps) => {
     const otherGizmoData = useWireOtherGizmoContext();
 
     return (
-        <div className="wirecutting">
+        <div className={cn("wirecutting", completed.value && "completed")}>
             <HelpButton>
                 <WiresHelp />
             </HelpButton>
@@ -527,7 +525,6 @@ const KeepTalkingWires = ({ level }: GizmoProps) => {
                     if (wire) {
                         wire.isCut = true;
                         const wiresToCut = determineAppropriateWiresToCut(wires.value, gizmos.value, otherGizmoData);
-                        console.log(wiresToCut);
                         if (wiresToCut.length === 0) {
                             didFail.value = true;
                             return;
@@ -542,6 +539,10 @@ const KeepTalkingWires = ({ level }: GizmoProps) => {
                             didWin.value = true;
                             setTimeout(() => {
                                 didWin.value = false;
+                                if (level.value >= 8) {
+                                    completed.value = true;
+                                    return;
+                                }
                                 level.value++;
                             }, 2000);
                         }
@@ -612,11 +613,11 @@ const KeepTalkingWires = ({ level }: GizmoProps) => {
     );
 };
 
-export const Wires = ({ level }: GizmoProps) => {
+export const Wires = ({ level, completed }: GizmoProps) => {
     if (level.value < 6) {
-        return <AmongUsWires level={level} />;
+        return <AmongUsWires level={level} completed={completed} />;
     }
-    return <KeepTalkingWires level={level} />;
+    return <KeepTalkingWires level={level} completed={completed} />;
 };
 
 import { createContext } from "preact";
