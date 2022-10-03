@@ -332,35 +332,41 @@ interface WireRuleList {
     [key: string]: WireRule[];
 }
 const wireRules: WireRuleList = {
-    3: [
-        // If there are no red wires, cut the second wire.
+    4: [
+        // Cut every wire.
         (context) => {
-            if (!context.wires.some((wire) => wire.color === "red")) {
-                return [context.wires[1].position];
-            }
-            return [];
-        },
-        // Otherwise, if the last wire is white, cut the last wire.
-        (context) => {
-            if (context.wires[context.wires.length - 1].color === "white") {
-                return [context.wires.length - 1];
-            }
-
-            return [];
-        },
-        // Otherwise, if there is more than one blue wire, cut the last blue wire.
-        (context) => {
-            const blueWires = context.wires.filter((wire) => wire.color === "blue");
-            if (blueWires.length > 1) {
-                return [blueWires[blueWires.length - 1].position];
-            }
-            return [];
-        },
-        // Otherwise, cut the last wire.
-        (context) => {
-            return [context.wires[context.wires.length - 1].position];
+            return context.wires.map((x) => x.position);
         },
     ],
+    // 3: [
+    //     // If there are no red wires, cut the second wire.
+    //     (context) => {
+    //         if (!context.wires.some((wire) => wire.color === "red")) {
+    //             return [context.wires[1].position];
+    //         }
+    //         return [];
+    //     },
+    //     // Otherwise, if the last wire is white, cut the last wire.
+    //     (context) => {
+    //         if (context.wires[context.wires.length - 1].color === "white") {
+    //             return [context.wires.length - 1];
+    //         }
+
+    //         return [];
+    //     },
+    //     // Otherwise, if there is more than one blue wire, cut the last blue wire.
+    //     (context) => {
+    //         const blueWires = context.wires.filter((wire) => wire.color === "blue");
+    //         if (blueWires.length > 1) {
+    //             return [blueWires[blueWires.length - 1].position];
+    //         }
+    //         return [];
+    //     },
+    //     // Otherwise, cut the last wire.
+    //     (context) => {
+    //         return [context.wires[context.wires.length - 1].position];
+    //     },
+    // ],
 };
 
 function determineAppropriateWiresToCut(wires: KeepTalkingWire[]): number[] {
@@ -409,7 +415,7 @@ const KeepTalkingWires = ({ level }: GizmoProps) => {
     const wires = useSignal<KeepTalkingWire[]>([]);
 
     useSignalEffect(() => {
-        wires.value = generateWires(level.value - 3);
+        wires.value = generateWires(level.value - 2);
     });
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
