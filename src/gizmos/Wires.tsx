@@ -398,7 +398,7 @@ const wireRules: WireRuleList = {
     6: [
         // If Wordle is present and the current word contains "T", "I", "C", or "K", cut the third wire.
         (context) => {
-            if (!context.gizmos.some((gizmo) => gizmo.id === "wordle")) {
+            if (!context.gizmos.some((gizmo) => gizmo.id === "wordle" && !gizmo.completed.value)) {
                 return [];
             }
             if (
@@ -413,7 +413,7 @@ const wireRules: WireRuleList = {
         },
         // If Minesweeper is present and there is a mine in a corner, cut the fourth wire.
         (context) => {
-            if (!context.gizmos.some((gizmo) => gizmo.id === "minesweeper")) {
+            if (!context.gizmos.some((gizmo) => gizmo.id === "minesweeper" && !gizmo.completed.value)) {
                 return [];
             }
             if (context.otherGizmoData.minesweeperCorner) {
@@ -423,7 +423,7 @@ const wireRules: WireRuleList = {
         },
         // If the Button is present and the number on the button is odd, cut the second wire.
         (context) => {
-            if (!context.gizmos.some((gizmo) => gizmo.id === "button")) {
+            if (!context.gizmos.some((gizmo) => gizmo.id === "button" && !gizmo.completed.value)) {
                 return [];
             }
             if (context.otherGizmoData.buttonNumber % 2 === 1) {

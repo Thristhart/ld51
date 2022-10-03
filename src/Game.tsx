@@ -14,6 +14,7 @@ export interface Gizmo {
     readonly Component: FunctionComponent<GizmoProps>;
     readonly level: Signal<number>;
     readonly id: string;
+    readonly completed: Signal<boolean>;
 }
 
 let lastTick = performance.now();
@@ -34,15 +35,15 @@ interface GameState {
 const GameStateContext = createContext<GameState | null>(null);
 const GameStateProvider = ({ children }: { children: ComponentChildren }) => {
     const gizmos = useSignal<Gizmo[]>([
-        { Component: Timer, level: signal(1), id: "timer" },
-        { Component: Blank, level: signal(1), id: "blank" },
-        { Component: Blank, level: signal(1), id: "blank" },
-        { Component: Blank, level: signal(1), id: "blank" },
-        { Component: Blank, level: signal(1), id: "blank" },
-        { Component: Blank, level: signal(1), id: "blank" },
-        { Component: Blank, level: signal(1), id: "blank" },
-        { Component: Blank, level: signal(1), id: "blank" },
-        { Component: Blank, level: signal(1), id: "blank" },
+        { Component: Timer, level: signal(1), id: "timer", completed: signal(false) },
+        { Component: Blank, level: signal(1), id: "blank", completed: signal(false) },
+        { Component: Blank, level: signal(1), id: "blank", completed: signal(false) },
+        { Component: Blank, level: signal(1), id: "blank", completed: signal(false) },
+        { Component: Blank, level: signal(1), id: "blank", completed: signal(false) },
+        { Component: Blank, level: signal(1), id: "blank", completed: signal(false) },
+        { Component: Blank, level: signal(1), id: "blank", completed: signal(false) },
+        { Component: Blank, level: signal(1), id: "blank", completed: signal(false) },
+        { Component: Blank, level: signal(1), id: "blank", completed: signal(false) },
     ]);
 
     return <GameStateContext.Provider value={useState({ gizmos, gameTime })[0]}>{children}</GameStateContext.Provider>;

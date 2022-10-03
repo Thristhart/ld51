@@ -56,7 +56,7 @@ const moduleOrder = [
     },
 ];
 const GizmoWrapper = ({ gizmo, completedCount }: GizmoWrapperProps) => {
-    const { Component, level } = gizmo;
+    const { Component, completed, level } = gizmo;
     const previousLevel = useSignal(level.peek());
     const levelUpSound = useLevelUpSound();
     useSignalEffect(() => {
@@ -71,7 +71,6 @@ const GizmoWrapper = ({ gizmo, completedCount }: GizmoWrapperProps) => {
             completedCount.value = completedCount.peek() + 1;
         }
     });
-    const completed = useSignal(false);
     return <Component level={level} completed={completed} />;
 };
 
@@ -89,6 +88,7 @@ export const GizmoGrid = () => {
                     Component: nextModule.component,
                     level: signal(1),
                     id: nextModule.id,
+                    completed: signal(false),
                 });
                 gizmos.value = [...gizmos.value];
             }
