@@ -13,6 +13,7 @@ import { Maze } from "./gizmos/Maze";
 import { Minesweeper } from "./gizmos/Minesweeper";
 import { Numbers } from "./gizmos/Numbers";
 import { Rhythm } from "./gizmos/Rhythm";
+import { Stacker } from "./gizmos/Stacker";
 import { Wordle } from "./gizmos/Wordle";
 const yaySound = new Howl({ src: yaySoundPath, volume: 0.4 });
 interface GizmoWrapperProps {
@@ -48,6 +49,10 @@ const moduleOrder = [
     {
         component: Minesweeper,
         id: "minesweeper",
+    },
+    {
+        component: Stacker,
+        id: "stacker",
     },
 ];
 const GizmoWrapper = ({ gizmo, completedCount }: GizmoWrapperProps) => {

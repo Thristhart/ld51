@@ -61,6 +61,7 @@
 
 .completed {
     animation: completed 1s ease-in-out forwards;
+    pointer-events: none;
 }
 @keyframes completed {
     0% {
