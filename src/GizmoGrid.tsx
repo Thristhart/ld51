@@ -55,7 +55,9 @@ const GizmoWrapper = ({ gizmo, completedCount }: GizmoWrapperProps) => {
     const previousLevel = useSignal(level.peek());
     const levelUpSound = useLevelUpSound();
     useSignalEffect(() => {
+        console.log("getSignal", level.value, previousLevel.peek(), gizmo.id);
         if (level.value > previousLevel.peek() && gizmo.id !== "timer") {
+            console.log("playSound");
             levelUpSound.play();
         }
         previousLevel.value = level.peek();
@@ -76,9 +78,17 @@ export const GizmoGrid = () => {
     const gameTimeSeconds = useGameTimeSeconds();
 
     useSignalEffect(() => {
-        if (gameTimeSeconds.value / 10 >= gizmos.value.length && gizmos.value.length < 9) {
-            const nextModule = moduleOrder.splice(0, 1)[0];
-            gizmos.value = [...gizmos.value, { Component: nextModule.component, level: signal(1), id: nextModule.id }];
+        const realGizmos = gizmos.value.filter((x) => x.id != "blank");
+        if (gameTimeSeconds.value / 10 >= realGizmos.length && realGizmos.length < 9) {
+            if (moduleOrder.length > 0) {
+                const nextModule = moduleOrder.splice(0, 1)[0];
+                gizmos.value.splice(realGizmos.length, 1, {
+                    Component: nextModule.component,
+                    level: signal(1),
+                    id: nextModule.id,
+                });
+                gizmos.value = [...gizmos.value];
+            }
         }
     });
 

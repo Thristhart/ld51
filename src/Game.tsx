@@ -4,6 +4,7 @@ import { useContext, useState } from "preact/hooks";
 import { GizmoGrid } from "~/GizmoGrid";
 import { Timer } from "~/gizmos/Timer";
 import { AudioProvider } from "./components/AudioContext";
+import { Blank } from "./gizmos/Blank";
 
 export interface GizmoProps {
     readonly level: Signal<number>;
@@ -32,7 +33,17 @@ interface GameState {
 }
 const GameStateContext = createContext<GameState | null>(null);
 const GameStateProvider = ({ children }: { children: ComponentChildren }) => {
-    const gizmos = useSignal<Gizmo[]>([{ Component: Timer, level: signal(1), id: "timer" }]);
+    const gizmos = useSignal<Gizmo[]>([
+        { Component: Timer, level: signal(1), id: "timer" },
+        { Component: Blank, level: signal(1), id: "blank" },
+        { Component: Blank, level: signal(1), id: "blank" },
+        { Component: Blank, level: signal(1), id: "blank" },
+        { Component: Blank, level: signal(1), id: "blank" },
+        { Component: Blank, level: signal(1), id: "blank" },
+        { Component: Blank, level: signal(1), id: "blank" },
+        { Component: Blank, level: signal(1), id: "blank" },
+        { Component: Blank, level: signal(1), id: "blank" },
+    ]);
 
     return <GameStateContext.Provider value={useState({ gizmos, gameTime })[0]}>{children}</GameStateContext.Provider>;
 };
