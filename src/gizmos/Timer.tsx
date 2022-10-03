@@ -265,7 +265,7 @@ const Analog = () => {
 
     return (
         <Canvas
-            class=""
+            class="analogTimer"
             width={640}
             height={640}
             tick={(canvas, context) => {
@@ -315,6 +315,62 @@ const Analog = () => {
     );
 };
 
+const Digital = () => {
+    const time = useGameTimeSeconds();
+
+    return (
+        <Canvas
+            class="analogTimer"
+            width={640}
+            height={640}
+            tick={(canvas, context) => {
+                // Background
+                context.fillStyle = "#1e2021";
+                context.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Timer
+                const fontSize = 100;
+                context.font = fontSize + "px Vector Mono";
+                const timeMod10 = time.value % 10;
+                const timeToShow = 10 - timeMod10;
+                const timeToShowString = "0:" + timeToShow.toString().padStart(2, "0");
+                const text = context.measureText(timeToShowString);
+                const rect = {
+                    x: canvas.width * 0.2,
+                    y: canvas.height * 0.59 - fontSize * 1.3,
+                    width: text.width * 1.1,
+                    height: fontSize * 1.3,
+                };
+                //Clock
+                // - Outer
+                const padding = 80;
+                context.beginPath();
+                context.moveTo(rect.x, rect.y - padding);
+                context.lineTo(rect.x + rect.width, rect.y - padding);
+                context.lineTo(rect.x + rect.width + padding, rect.y);
+                context.lineTo(rect.x + rect.width + padding, rect.y + rect.height);
+                context.lineTo(rect.x + rect.width, rect.y + rect.height + padding);
+                context.lineTo(rect.x, rect.y + rect.height + padding);
+                context.lineTo(rect.x - padding, rect.y + rect.height);
+                context.lineTo(rect.x - padding, rect.y);
+                context.lineTo(rect.x, rect.y - padding);
+                context.fillStyle = "#555555";
+                context.fill();
+                context.stroke();
+                // - Inner
+                context.strokeStyle = "Black";
+                context.lineWidth = 10;
+                context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+                // - Redraw Text
+                context.fillStyle = "#000000";
+                context.fillRect(rect.x, rect.y, rect.width, rect.height);
+                context.fillStyle = "#ff0000";
+                context.fillText(timeToShowString, canvas.width * 0.23, canvas.height * 0.55);
+            }}
+        />
+    );
+};
+
 export const Timer = ({ level }: GizmoProps) => {
     if (level.value === 1) {
         return <Hourglass />;
@@ -324,6 +380,9 @@ export const Timer = ({ level }: GizmoProps) => {
     }
     if (level.value === 3) {
         return <Analog />;
+    }
+    if (level.value === 4 || level.value === 5) {
+        return <Digital />;
     }
     return <Hourglass />;
 };

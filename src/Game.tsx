@@ -39,7 +39,7 @@ interface GameState {
 const GameStateContext = createContext<GameState | null>(null);
 const GameStateProvider = ({ children }: { children: ComponentChildren }) => {
     const gizmos = useSignal<Gizmo[]>([
-        { Component: Timer, level: signal(5), id: "timer" },
+        { Component: Timer, level: signal(1), id: "timer" },
         { Component: Numbers, level: signal(1), id: "numbers" },
         { Component: Button, level: signal(1), id: "button" },
         { Component: Wordle, level: signal(1), id: "wordle" },
