@@ -1,7 +1,8 @@
 import { useComputed, useSignal, useSignalEffect } from "@preact/signals";
 import cn from "classnames";
 import { useRef } from "preact/hooks";
-import { GizmoProps } from "~/Game";
+import { Canvas } from "~/components/Canvas";
+import { GizmoProps, useGameTime } from "~/Game";
 import "./Wires.css";
 interface WireLeftProps {
     readonly type: typeof colors[number];
@@ -123,7 +124,7 @@ function getRightWire(element: Element) {
 
 const colors = ["yellow", "green", "red", "blue", "black"] as const;
 
-export const Wires = ({ level }: GizmoProps) => {
+const AmongUsWires = ({ level }: GizmoProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const wireCount = useSignal(level.value);
     const wireDrag = useSignal<{ type: typeof colors[number]; pos: [x: number, y: number] } | undefined>(undefined);
@@ -245,3 +246,264 @@ export const Wires = ({ level }: GizmoProps) => {
         </div>
     );
 };
+
+function getImage(url: string) {
+    const image = new Image();
+    image.src = url;
+    return image;
+}
+
+import moduleBackgroundPath from "../assets/images/wireCutting/wireless_module.png";
+
+import wiresUncut1Path from "../assets/images/wireCutting/wire1_full.png";
+import wiresUncut2Path from "../assets/images/wireCutting/wire2_full.png";
+import wiresUncut3Path from "../assets/images/wireCutting/wire3_full.png";
+import wiresUncut4Path from "../assets/images/wireCutting/wire4_full.png";
+import wiresUncut5Path from "../assets/images/wireCutting/wire5_full.png";
+import wiresUncut6Path from "../assets/images/wireCutting/wire6_full.png";
+
+import { HelpButton } from "~/components/HelpButton";
+import wiresCut1Path from "../assets/images/wireCutting/wire1_cut.png";
+import wiresCut2Path from "../assets/images/wireCutting/wire2_cut.png";
+import wiresCut3Path from "../assets/images/wireCutting/wire3_cut.png";
+import wiresCut4Path from "../assets/images/wireCutting/wire4_cut.png";
+import wiresCut5Path from "../assets/images/wireCutting/wire5_cut.png";
+import wiresCut6Path from "../assets/images/wireCutting/wire6_cut.png";
+
+const moduleBackground = getImage(moduleBackgroundPath);
+const wiresCut = [
+    getImage(wiresCut1Path),
+    getImage(wiresCut2Path),
+    getImage(wiresCut3Path),
+    getImage(wiresCut4Path),
+    getImage(wiresCut5Path),
+    getImage(wiresCut6Path),
+];
+const wiresUncut = [
+    getImage(wiresUncut1Path),
+    getImage(wiresUncut2Path),
+    getImage(wiresUncut3Path),
+    getImage(wiresUncut4Path),
+    getImage(wiresUncut5Path),
+    getImage(wiresUncut6Path),
+];
+
+const tints: { [key: string]: string | undefined } = {
+    red: "#dd0f0f",
+    yellow: "#dfdf00",
+    blue: "#5252ff",
+};
+
+const tintCache = new Map<string, HTMLCanvasElement>();
+function getTintedVersionOfImage(image: HTMLImageElement, tintColor: string) {
+    const key = `${image.src}#${tintColor}`;
+    if (tintCache.has(key)) {
+        return tintCache.get(key)!;
+    }
+    if (!image.complete) {
+        const canvas = document.createElement("canvas");
+        canvas.width = 1080;
+        canvas.height = 1080;
+        // @ts-ignore
+        canvas.loaded = false;
+        return canvas;
+    }
+
+    const canvas = document.createElement("canvas");
+    canvas.width = image.width;
+    canvas.height = image.height;
+    const ctx = canvas.getContext("2d")!;
+    ctx.fillStyle = tints[tintColor] ?? tintColor;
+    ctx.drawImage(image, 0, 0);
+    ctx.globalCompositeOperation = "multiply";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.globalCompositeOperation = "destination-in";
+    ctx.drawImage(image, 0, 0);
+    tintCache.set(key, canvas);
+    return canvas;
+}
+
+interface WireContext {
+    wires: KeepTalkingWire[];
+}
+type WireRule = (context: WireContext) => number[];
+
+interface WireRuleList {
+    [key: string]: WireRule[];
+}
+const wireRules: WireRuleList = {
+    3: [
+        // If there are no red wires, cut the second wire.
+        (context) => {
+            if (!context.wires.some((wire) => wire.color === "red")) {
+                return [context.wires[1].position];
+            }
+            return [];
+        },
+        // Otherwise, if the last wire is white, cut the last wire.
+        (context) => {
+            if (context.wires[context.wires.length - 1].color === "white") {
+                return [context.wires.length - 1];
+            }
+
+            return [];
+        },
+        // Otherwise, if there is more than one blue wire, cut the last blue wire.
+        (context) => {
+            const blueWires = context.wires.filter((wire) => wire.color === "blue");
+            if (blueWires.length > 1) {
+                return [blueWires[blueWires.length - 1].position];
+            }
+            return [];
+        },
+        // Otherwise, cut the last wire.
+        (context) => {
+            return [context.wires[context.wires.length - 1].position];
+        },
+    ],
+};
+
+function determineAppropriateWiresToCut(wires: KeepTalkingWire[]): number[] {
+    const ruleList = wireRules[wires.length];
+    if (!ruleList) {
+        return [];
+    }
+
+    for (const rule of ruleList) {
+        const result = rule({ wires });
+        if (result.length > 0) {
+            return result;
+        }
+    }
+
+    return [];
+}
+
+function generateWires(count: number): KeepTalkingWire[] {
+    const colors = ["red", "blue", "yellow", "white", "black"];
+    const wires: KeepTalkingWire[] = [];
+    let possibleSkips = 6 - count;
+    for (let i = 0; i < 6 && wires.length < count; i++) {
+        if (Math.random() < 0.4 && possibleSkips > 0) {
+            possibleSkips--;
+            continue;
+        }
+        wires.push({
+            color: colors[Math.floor(Math.random() * colors.length)],
+            isCut: false,
+            position: i,
+        });
+    }
+    return wires;
+}
+
+interface KeepTalkingWire {
+    color: string;
+    position: number;
+    isCut: boolean;
+}
+
+const KeepTalkingWires = ({ level }: GizmoProps) => {
+    const time = useGameTime();
+    const cursorPosition = useSignal([0, 0]);
+    const wires = useSignal<KeepTalkingWire[]>([]);
+
+    useSignalEffect(() => {
+        wires.value = generateWires(level.value - 3);
+    });
+
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    const hoveringWire = useSignal<number | null>(null);
+
+    return (
+        <div className="wirecutting">
+            <HelpButton>
+                <WiresHelp />
+            </HelpButton>
+            <Canvas
+                width={1080}
+                height={1080}
+                canvasRef={canvasRef}
+                onMouseMove={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    cursorPosition.value = [
+                        ((e.clientX - rect.left) / rect.width) * 1080,
+                        ((e.clientY - rect.top) / rect.height) * 1080,
+                    ];
+                }}
+                onClick={() => {
+                    const wire = wires.value.find((w) => w.position === hoveringWire.value);
+                    if (wire) {
+                        wire.isCut = true;
+                        const wiresToCut = determineAppropriateWiresToCut(wires.value);
+                        console.log(wiresToCut);
+                        if (wiresToCut.length === 0) {
+                            // TODO: Fail
+                            console.log("Failed");
+                            return;
+                        }
+                        const incorrectCuts = wires.value.filter((w) => w.isCut && !wiresToCut.includes(w.position));
+                        if (incorrectCuts.length > 0) {
+                            // TODO: Fail
+                            console.log("Failed");
+                            return;
+                        }
+                        const correctCuts = wires.value.filter((w) => w.isCut && wiresToCut.includes(w.position));
+                        if (correctCuts.length === wiresToCut.length) {
+                            // TODO: win
+                            console.log("Win");
+                        }
+                    }
+                }}
+                tick={(canvas, context) => {
+                    time.value; // force update
+
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                    context.drawImage(moduleBackground, 0, 0, canvas.width, canvas.height);
+                    let hoveringOverWire = false;
+                    for (const wire of wires.value) {
+                        const image = wire.isCut ? wiresCut[wire.position] : wiresUncut[wire.position];
+                        const canvas = getTintedVersionOfImage(image, wire.color);
+
+                        let isHovering = false;
+                        const wireContext = canvas.getContext("2d")!;
+                        const [x, y] = cursorPosition.value;
+                        const alphaUnderCursor = wireContext.getImageData(x, y, 1, 1).data[3];
+                        if (alphaUnderCursor > 100) {
+                            // hovering
+                            isHovering = true;
+                        }
+
+                        if (isHovering) {
+                            context.shadowBlur = 30;
+                            context.shadowColor = "black";
+                            context.shadowOffsetX = 10;
+                            context.shadowOffsetY = 10;
+                            hoveringOverWire = true;
+                            hoveringWire.value = wire.position;
+                        } else {
+                            context.shadowColor = "transparent";
+                        }
+                        context.drawImage(canvas, 0, 0, canvas.width, canvas.height);
+                    }
+                    if (hoveringOverWire) {
+                        canvasRef.current!.style.cursor = "pointer";
+                    } else {
+                        canvasRef.current!.style.cursor = "unset";
+                        hoveringWire.value = null;
+                    }
+                }}
+            />
+        </div>
+    );
+};
+
+export const Wires = ({ level }: GizmoProps) => {
+    if (level.value < 6) {
+        return <AmongUsWires level={level} />;
+    }
+    return <KeepTalkingWires level={level} />;
+};
+
+import WiresHelp from "./WiresHelp.mdx";

@@ -92,3 +92,11 @@
 .rightPanel {
     right: 0;
 }
+
+.wirecutting {
+    padding: 0;
+}
+.wirecutting canvas {
+    width: 100%;
+    height: 100%;
+}

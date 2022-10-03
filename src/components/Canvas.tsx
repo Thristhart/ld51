@@ -1,8 +1,9 @@
 import { useSignalEffect } from "@preact/signals";
 import type { RefObject } from "preact";
 import { useEffect, useRef } from "preact/hooks";
+import { JSXInternal } from "preact/src/jsx";
 
-interface CanvasProps {
+interface CanvasProps extends JSXInternal.HTMLAttributes<HTMLCanvasElement> {
     readonly width: number;
     readonly height: number;
     readonly tick?: (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) => void;
@@ -10,7 +11,7 @@ interface CanvasProps {
     readonly className?: string;
     readonly onClick?: () => void;
 }
-export const Canvas = ({ width, height, tick, canvasRef, className, onClick }: CanvasProps) => {
+export const Canvas = ({ width, height, tick, canvasRef, className, onClick, ...canvasProps }: CanvasProps) => {
     const internalRef = useRef<HTMLCanvasElement>(null);
     const ref = canvasRef ?? internalRef;
     const contextRef = useRef<CanvasRenderingContext2D | null>(null);
@@ -31,5 +32,5 @@ export const Canvas = ({ width, height, tick, canvasRef, className, onClick }: C
         }
     });
 
-    return <canvas ref={ref} width={width} height={height} className={className} onClick={onClick} />;
+    return <canvas ref={ref} width={width} height={height} className={className} onClick={onClick} {...canvasProps} />;
 };

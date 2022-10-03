@@ -42,7 +42,7 @@ const GameStateProvider = ({ children }: { children: ComponentChildren }) => {
         { Component: Numbers, level: signal(1) },
         { Component: Button, level: signal(1) },
         { Component: Wordle, level: signal(1) },
-        { Component: Wires, level: signal(1) },
+        { Component: Wires, level: signal(6) },
         { Component: Rhythm, level: signal(1) },
         { Component: Maze, level: signal(1) },
         { Component: Minesweeper, level: signal(1) },
