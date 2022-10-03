@@ -112,7 +112,7 @@ const textColor = "green";
 const faceColor = "green";
 
 const scorePerSecond = 1024;
-const victoryPercentage = 0.75;
+const victoryPercentage = 0.65;
 
 const songs: Song[] = [
     {
@@ -255,6 +255,8 @@ function getSongForLevel(level: number) {
 
 const arrowPosition = 620;
 
+const hitFudge = 0.1;
+
 export const Rhythm = ({ level }: GizmoProps) => {
     const song = useSignal<Song>(getSongForLevel(level.value));
     const audioPosition = useAudioPosition(song.value.howl);
@@ -368,7 +370,10 @@ export const Rhythm = ({ level }: GizmoProps) => {
                     let expression = "neutral";
                     let accurateNotes: Notes[] = [];
                     song.value.beatMap.forEach((beat) => {
-                        if (audioPosition.value > beat.time && audioPosition.value < beat.time + beat.hold) {
+                        if (
+                            audioPosition.value > beat.time - hitFudge &&
+                            audioPosition.value < beat.time + beat.hold + hitFudge
+                        ) {
                             let wasHit = false;
                             if (beat.note === Notes.Left && leftPressed.value) {
                                 wasHit = true;
@@ -386,12 +391,14 @@ export const Rhythm = ({ level }: GizmoProps) => {
                                 wasHit = true;
                                 expression = "right";
                             }
+                            const isFudgeTime =
+                                audioPosition.value < beat.time || audioPosition.value > beat.time + beat.hold;
 
                             if (wasHit) {
                                 song.value.howl.mute(false, patternSoundId.value);
                                 accurateNotes.push(beat.note);
                                 score.value = score.peek() + scorePerSecond * dt;
-                            } else {
+                            } else if (!isFudgeTime) {
                                 // miss
                                 song.value.howl.mute(true, patternSoundId.value);
                                 score.value = score.peek() - scorePerSecond * dt * 0.3;
