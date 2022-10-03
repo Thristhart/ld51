@@ -29,7 +29,7 @@ export const GizmoGrid = () => {
 
     useSignalEffect(() => {
         if (gameTimeSeconds.value / 10 >= gizmos.value.length && gizmos.value.length < 9) {
-            gizmos.value = [...gizmos.value, { Component: Wordle, level: signal(1) }];
+            gizmos.value = [...gizmos.value, { Component: Wordle, level: signal(1), id: "wordle" }];
         }
     });
 
