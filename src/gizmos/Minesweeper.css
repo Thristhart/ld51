@@ -6,16 +6,16 @@
     background-color: #c0c0c0;
 
     display: grid;
-    grid-template-columns: auto 5vmin 5vmin 5vmin auto;
-    grid-template-rows: max-content 15vmin;
+    grid-template-columns: auto 8.66vmin 8.66vmin 8.66vmin auto;
+    grid-template-rows: max-content 26vmin;
     grid-template-areas:
         "padding mineCount face help"
         "padding minesweeper minesweeper minesweeper";
     gap: 0.3vmin;
 }
 .minesweeperFaceButton {
-    width: 2.5vmin;
-    height: 2.5vmin;
+    width: 4vmin;
+    height: 4vmin;
     background-image: url("../assets/images/minesweeper/face_button.png");
     background-position-x: 0;
     background-size: calc(100% * 5);
@@ -35,8 +35,8 @@
     background-position-x: calc(-100% * 4);
 }
 .minesweeper .helpButton {
-    width: 2.5vmin;
-    height: 2.5vmin;
+    width: 4vmin;
+    height: 4vmin;
     background-image: url("../assets/images/minesweeper/help.png");
     background-position-x: 0;
     background-size: calc(100% * 2);
@@ -59,8 +59,8 @@
     align-self: flex-end;
 }
 .minesweeperDigit {
-    width: 1.3vmin;
-    height: 2.3vmin;
+    width: 1.95vmin;
+    height: 3.45vmin;
     background-image: url("../assets/images/minesweeper/digits.png");
     background-position-x: calc(-100% * var(--digit));
     background-size: calc(100% * 11);

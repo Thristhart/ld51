@@ -1,7 +1,26 @@
 import { useSignal } from "@preact/signals";
+import { useEffect, useRef } from "preact/hooks";
+import {
+    AmbientLight,
+    DoubleSide,
+    Mesh,
+    MeshPhongMaterial,
+    NearestFilter,
+    PCFSoftShadowMap,
+    PerspectiveCamera,
+    PlaneGeometry,
+    RepeatWrapping,
+    Scene,
+    SpotLight,
+    sRGBEncoding,
+    TextureLoader,
+    WebGLRenderer,
+} from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import sundialGlbPath from "~/assets/models/sundial.glb";
 import { Canvas } from "~/components/Canvas";
 import { TEN_SECONDS } from "~/constants";
-import { useGameTime } from "~/Game";
+import { GizmoProps, useGameTime } from "~/Game";
 import "./Timer.css";
 
 const hourglassPolygon = [
@@ -111,6 +130,137 @@ const Hourglass = () => {
     );
 };
 
-export const Timer = () => {
+const sundialLightStartAngle = Math.PI * 2 * -0.1;
+const sundialLightEndAngle = Math.PI * 1.2;
+
+const sundialLightResetStartAngle = Math.PI * 1.2;
+const sundialLightResetEndAngle = Math.PI * 2 * 0.9;
+
+import planeTexturePath from "~/assets/images/table.jpg";
+
+const Sundial = () => {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const threeState = useRef<{
+        scene: Scene;
+        camera: PerspectiveCamera;
+        renderer: WebGLRenderer;
+        light: SpotLight;
+    }>();
+
+    useEffect(() => {
+        if (!canvasRef.current) {
+            return;
+        }
+        const scene = new Scene();
+        const camera = new PerspectiveCamera(75, canvasRef.current.width / canvasRef.current.height, 0.1, 1000);
+
+        const renderer = new WebGLRenderer({ canvas: canvasRef.current, alpha: true });
+
+        renderer.physicallyCorrectLights = true;
+        renderer.outputEncoding = sRGBEncoding;
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = PCFSoftShadowMap;
+
+        const light = new SpotLight(0xffffff, 3);
+        light.position.set(5, 3, -1);
+        light.castShadow = true;
+        light.shadow.bias = -0.0001;
+        light.shadow.mapSize.width = 2048;
+        light.shadow.mapSize.height = 2048;
+        scene.add(light);
+
+        const ambient = new AmbientLight(0xffffff, 0.05);
+        scene.add(ambient);
+        {
+            const planeSize = 40;
+
+            const loader = new TextureLoader();
+            const texture = loader.load(planeTexturePath);
+            texture.wrapS = RepeatWrapping;
+            texture.wrapT = RepeatWrapping;
+            texture.magFilter = NearestFilter;
+            const repeats = planeSize / 2;
+            texture.repeat.set(repeats, repeats);
+
+            const planeGeo = new PlaneGeometry(planeSize, planeSize);
+            const planeMat = new MeshPhongMaterial({
+                map: texture,
+                side: DoubleSide,
+            });
+            const mesh = new Mesh(planeGeo, planeMat);
+            mesh.receiveShadow = true;
+            mesh.rotation.x = Math.PI * -0.5;
+            mesh.position.y = 0;
+            scene.add(mesh);
+        }
+
+        camera.position.z = 0.6;
+        camera.position.y = 1.6;
+        camera.position.x = 0.1;
+
+        const loader = new GLTFLoader();
+        loader.load(
+            sundialGlbPath,
+            function (gltf) {
+                scene.add(gltf.scene);
+                gltf.scene.traverse((child) => {
+                    if (child instanceof Mesh) {
+                        if (child.name === "DialBase" || child.name === "Text") {
+                            child.receiveShadow = true;
+                        } else {
+                            child.castShadow = true;
+                        }
+                    }
+                });
+                camera.lookAt(gltf.scene.position);
+                light.lookAt(gltf.scene.position);
+            },
+            undefined,
+            function (error) {
+                console.error(error);
+            }
+        );
+
+        threeState.current = { scene, camera, renderer, light };
+    }, []);
+
+    const time = useGameTime();
+
+    return (
+        <Canvas
+            class="timer sundial"
+            width={640}
+            height={640}
+            canvasRef={canvasRef}
+            disableContext={true}
+            tick={() => {
+                const period = time.value % TEN_SECONDS;
+                let progress = (period - flipDuration) / (TEN_SECONDS - flipDuration);
+                let flipProgress = period / flipDuration;
+                if (!threeState.current) {
+                    return;
+                }
+                const { scene, camera, renderer, light } = threeState.current;
+                let angle;
+                if (progress < 0) {
+                    progress = 1;
+                    angle =
+                        sundialLightResetStartAngle +
+                        (sundialLightResetEndAngle - sundialLightResetStartAngle) * flipProgress;
+                } else {
+                    angle = sundialLightStartAngle + (sundialLightEndAngle - sundialLightStartAngle) * progress;
+                }
+
+                light.position.set(Math.cos(angle) * 5, 2.8, Math.sin(angle) * 5);
+                renderer.render(scene, camera);
+            }}
+        />
+    );
+};
+
+export const Timer = ({ level }: GizmoProps) => {
+    if (level.value > 1) {
+        return <Sundial />;
+    }
     return <Hourglass />;
 };

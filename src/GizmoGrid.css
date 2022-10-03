@@ -2,8 +2,8 @@
     width: 100vmin;
     height: 100vmin;
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(5, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
     background-color: #0d1117;
 }
 
@@ -17,102 +17,38 @@
 }
 
 .gizmoGrid > *:nth-child(1) {
-    grid-row: 3;
-    grid-column: 3;
+    grid-row: 2;
+    grid-column: 2;
 }
 .gizmoGrid > *:nth-child(2) {
-    grid-column: 3;
-    grid-row: 2;
+    grid-column: 2;
+    grid-row: 1;
 }
 .gizmoGrid > *:nth-child(3) {
-    grid-column: 4;
-    grid-row: 2;
+    grid-column: 3;
+    grid-row: 1;
 }
 .gizmoGrid > *:nth-child(4) {
-    grid-column: 4;
-    grid-row: 3;
+    grid-column: 3;
+    grid-row: 2;
 }
 .gizmoGrid > *:nth-child(5) {
-    grid-column: 4;
-    grid-row: 4;
+    grid-column: 3;
+    grid-row: 3;
 }
 .gizmoGrid > *:nth-child(6) {
-    grid-column: 3;
-    grid-row: 4;
+    grid-column: 2;
+    grid-row: 3;
 }
 .gizmoGrid > *:nth-child(7) {
-    grid-column: 2;
-    grid-row: 4;
+    grid-column: 1;
+    grid-row: 3;
 }
 .gizmoGrid > *:nth-child(8) {
-    grid-column: 2;
-    grid-row: 3;
+    grid-column: 1;
+    grid-row: 2;
 }
 .gizmoGrid > *:nth-child(9) {
-    grid-column: 2;
-    grid-row: 2;
-}
-.gizmoGrid > *:nth-child(10) {
-    grid-column: 3;
-    grid-row: 1;
-}
-.gizmoGrid > *:nth-child(11) {
-    grid-column: 4;
-    grid-row: 1;
-}
-.gizmoGrid > *:nth-child(12) {
-    grid-column: 5;
-    grid-row: 1;
-}
-.gizmoGrid > *:nth-child(13) {
-    grid-column: 5;
-    grid-row: 2;
-}
-.gizmoGrid > *:nth-child(14) {
-    grid-column: 5;
-    grid-row: 3;
-}
-.gizmoGrid > *:nth-child(15) {
-    grid-column: 5;
-    grid-row: 4;
-}
-.gizmoGrid > *:nth-child(16) {
-    grid-column: 5;
-    grid-row: 5;
-}
-.gizmoGrid > *:nth-child(17) {
-    grid-column: 4;
-    grid-row: 5;
-}
-.gizmoGrid > *:nth-child(18) {
-    grid-column: 3;
-    grid-row: 5;
-}
-.gizmoGrid > *:nth-child(19) {
-    grid-column: 2;
-    grid-row: 5;
-}
-.gizmoGrid > *:nth-child(20) {
     grid-column: 1;
-    grid-row: 5;
-}
-.gizmoGrid > *:nth-child(21) {
-    grid-column: 1;
-    grid-row: 4;
-}
-.gizmoGrid > *:nth-child(22) {
-    grid-column: 1;
-    grid-row: 3;
-}
-.gizmoGrid > *:nth-child(23) {
-    grid-column: 1;
-    grid-row: 2;
-}
-.gizmoGrid > *:nth-child(24) {
-    grid-column: 1;
-    grid-row: 1;
-}
-.gizmoGrid > *:nth-child(25) {
-    grid-column: 2;
     grid-row: 1;
 }
