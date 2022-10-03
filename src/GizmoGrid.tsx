@@ -101,7 +101,7 @@ export const GizmoGrid = () => {
         const timer = gizmos.value.find((g) => g.id === "timer");
         if (timer) {
             timer.level.value = completedCount.value + 1;
-            if (timer.level.value >= 8) {
+            if (timer.level.value >= 9) {
                 gizmos.value = [];
             }
         }
