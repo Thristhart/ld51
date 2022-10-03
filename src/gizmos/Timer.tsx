@@ -20,7 +20,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import sundialGlbPath from "~/assets/models/sundial.glb";
 import { Canvas } from "~/components/Canvas";
 import { TEN_SECONDS } from "~/constants";
-import { useGameTime } from "~/Game";
+import { GizmoProps, useGameTime } from "~/Game";
 import "./Timer.css";
 
 const hourglassPolygon = [
@@ -258,6 +258,9 @@ const Sundial = () => {
     );
 };
 
-export const Timer = () => {
-    return <Sundial />;
+export const Timer = ({ level }: GizmoProps) => {
+    if (level.value > 1) {
+        return <Sundial />;
+    }
+    return <Hourglass />;
 };
