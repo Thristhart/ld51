@@ -6,17 +6,20 @@
     -   Cut every wire.
 
     ### 5 wires:
-    -   If there is more than one red wire and the last digit of the serial number is odd, cut the last red wire.
-    -   Otherwise, if the last wire is yellow and there are no red wires, cut the first wire.
+    -   If there are no red wires, cut the second wire.
+    -   Otherwise, if the last wire is white, cut the last wire.
 
 </section>
 <section>
 
-    -   Otherwise, if there is exactly one blue wire, cut the first wire.
-    -   Otherwise, cut the second wire.
+    -   Otherwise, if there is more than one blue wire, cut the last blue wire.
+    -   Otherwise, cut the last wire.
 
     ### 6 wires:
 
-    -
+    - If Wordle is present and the current word contains "T", "I", "C", or "K", cut the third wire.
+    - If Minesweeper is present and there is a mine in a corner, cut the fourth wire.
+    - If the Button is present and the number on the button is odd, cut the second wire.
+    - Otherwise, cut the first wire.
 
 </section>

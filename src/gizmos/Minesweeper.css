@@ -108,11 +108,13 @@
 .minesweeperCell[data-state="mine"] {
     background-image: url("../assets/images/minesweeper/mine.png");
     background-size: 100%;
+    cursor: unset;
 }
 .minesweeperCell[data-state="revealed"] {
     background-image: url("../assets/images/minesweeper/numbers.png");
     background-position-x: calc(-100% * var(--nearby));
     background-size: calc(100% * 9);
+    cursor: unset;
 }
 
 .exampleGrid {

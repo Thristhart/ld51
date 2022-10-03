@@ -3,6 +3,7 @@ import { HelpButton } from "~/components/HelpButton";
 import { GizmoProps } from "~/Game";
 import "./Button.css";
 import ButtonHelp from "./ButtonHelp.mdx";
+import { useWireOtherGizmoContext } from "./Wires";
 
 export const Button = ({ level }: GizmoProps) => {
     const clicks = useSignal(0);
@@ -11,6 +12,10 @@ export const Button = ({ level }: GizmoProps) => {
             level.value = level.peek() + 1;
             clicks.value = 0;
         }
+    });
+    const wireOtherGizmo = useWireOtherGizmoContext();
+    useSignalEffect(() => {
+        wireOtherGizmo.buttonNumber = clicks.value;
     });
 
     return (

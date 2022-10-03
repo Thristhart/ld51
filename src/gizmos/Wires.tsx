@@ -1,8 +1,8 @@
 import { useComputed, useSignal, useSignalEffect } from "@preact/signals";
 import cn from "classnames";
-import { useRef } from "preact/hooks";
+import { useContext, useRef } from "preact/hooks";
 import { Canvas } from "~/components/Canvas";
-import { GizmoProps, useGameTime } from "~/Game";
+import { Gizmo, GizmoProps, useGameTime, useGizmoList } from "~/Game";
 import "./Wires.css";
 interface WireLeftProps {
     readonly type: typeof colors[number];
@@ -323,8 +323,25 @@ function getTintedVersionOfImage(image: HTMLImageElement, tintColor: string) {
     return canvas;
 }
 
+interface WireOtherGizmoData {
+    wordleWord: string;
+    minesweeperCorner: boolean;
+    buttonNumber: number;
+}
+export const WireOtherGizmoContext = createContext<WireOtherGizmoData>({
+    wordleWord: "",
+    minesweeperCorner: false,
+    buttonNumber: 0,
+});
+
+export const useWireOtherGizmoContext = () => {
+    return useContext(WireOtherGizmoContext);
+};
+
 interface WireContext {
     wires: KeepTalkingWire[];
+    gizmos: Gizmo[];
+    otherGizmoData: WireOtherGizmoData;
 }
 type WireRule = (context: WireContext) => number[];
 
@@ -338,45 +355,90 @@ const wireRules: WireRuleList = {
             return context.wires.map((x) => x.position);
         },
     ],
-    // 3: [
-    //     // If there are no red wires, cut the second wire.
-    //     (context) => {
-    //         if (!context.wires.some((wire) => wire.color === "red")) {
-    //             return [context.wires[1].position];
-    //         }
-    //         return [];
-    //     },
-    //     // Otherwise, if the last wire is white, cut the last wire.
-    //     (context) => {
-    //         if (context.wires[context.wires.length - 1].color === "white") {
-    //             return [context.wires.length - 1];
-    //         }
+    5: [
+        // If there are no red wires, cut the second wire.
+        (context) => {
+            if (!context.wires.some((wire) => wire.color === "red")) {
+                return [context.wires[1].position];
+            }
+            return [];
+        },
+        // Otherwise, if the last wire is white, cut the last wire.
+        (context) => {
+            if (context.wires[context.wires.length - 1].color === "white") {
+                return [context.wires.length - 1];
+            }
 
-    //         return [];
-    //     },
-    //     // Otherwise, if there is more than one blue wire, cut the last blue wire.
-    //     (context) => {
-    //         const blueWires = context.wires.filter((wire) => wire.color === "blue");
-    //         if (blueWires.length > 1) {
-    //             return [blueWires[blueWires.length - 1].position];
-    //         }
-    //         return [];
-    //     },
-    //     // Otherwise, cut the last wire.
-    //     (context) => {
-    //         return [context.wires[context.wires.length - 1].position];
-    //     },
-    // ],
+            return [];
+        },
+        // Otherwise, if there is more than one blue wire, cut the last blue wire.
+        (context) => {
+            const blueWires = context.wires.filter((wire) => wire.color === "blue");
+            if (blueWires.length > 1) {
+                return [blueWires[blueWires.length - 1].position];
+            }
+            return [];
+        },
+        // Otherwise, cut the last wire.
+        (context) => {
+            return [context.wires[context.wires.length - 1].position];
+        },
+    ],
+    6: [
+        // If Wordle is present and the current word contains "T", "I", "C", or "K", cut the third wire.
+        (context) => {
+            if (!context.gizmos.some((gizmo) => gizmo.id === "wordle")) {
+                return [];
+            }
+            if (
+                context.otherGizmoData.wordleWord.includes("t") ||
+                context.otherGizmoData.wordleWord.includes("i") ||
+                context.otherGizmoData.wordleWord.includes("c") ||
+                context.otherGizmoData.wordleWord.includes("k")
+            ) {
+                return [context.wires[2].position];
+            }
+            return [];
+        },
+        // If Minesweeper is present and there is a mine in a corner, cut the fourth wire.
+        (context) => {
+            if (!context.gizmos.some((gizmo) => gizmo.id === "minesweeper")) {
+                return [];
+            }
+            if (context.otherGizmoData.minesweeperCorner) {
+                return [context.wires[3].position];
+            }
+            return [];
+        },
+        // If the Button is present and the number on the button is odd, cut the second wire.
+        (context) => {
+            if (!context.gizmos.some((gizmo) => gizmo.id === "button")) {
+                return [];
+            }
+            if (context.otherGizmoData.buttonNumber % 2 === 1) {
+                return [context.wires[1].position];
+            }
+            return [];
+        },
+        // Otherwise, cut the first wire.
+        (context) => {
+            return [context.wires[0].position];
+        },
+    ],
 };
 
-function determineAppropriateWiresToCut(wires: KeepTalkingWire[]): number[] {
+function determineAppropriateWiresToCut(
+    wires: KeepTalkingWire[],
+    gizmos: Gizmo[],
+    otherGizmoData: WireOtherGizmoData
+): number[] {
     const ruleList = wireRules[wires.length];
     if (!ruleList) {
         return [];
     }
 
     for (const rule of ruleList) {
-        const result = rule({ wires });
+        const result = rule({ wires, gizmos, otherGizmoData });
         if (result.length > 0) {
             return result;
         }
@@ -409,6 +471,13 @@ interface KeepTalkingWire {
     isCut: boolean;
 }
 
+import { Howl } from "howler";
+import explosionSoundPath from "~/assets/audio/explosion.ogg";
+const explosionSound = new Howl({
+    src: [explosionSoundPath],
+    volume: 0.1,
+});
+
 const KeepTalkingWires = ({ level }: GizmoProps) => {
     const time = useGameTime();
     const cursorPosition = useSignal([0, 0]);
@@ -421,6 +490,21 @@ const KeepTalkingWires = ({ level }: GizmoProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     const hoveringWire = useSignal<number | null>(null);
+
+    const didWin = useSignal(false);
+    const didFail = useSignal(false);
+    useSignalEffect(() => {
+        if (didFail.value) {
+            explosionSound.play();
+            explosionSound.once("end", () => {
+                didFail.value = false;
+                wires.value = generateWires(level.value - 2);
+            });
+        }
+    });
+
+    const gizmos = useGizmoList();
+    const otherGizmoData = useWireOtherGizmoContext();
 
     return (
         <div className="wirecutting">
@@ -442,23 +526,24 @@ const KeepTalkingWires = ({ level }: GizmoProps) => {
                     const wire = wires.value.find((w) => w.position === hoveringWire.value);
                     if (wire) {
                         wire.isCut = true;
-                        const wiresToCut = determineAppropriateWiresToCut(wires.value);
+                        const wiresToCut = determineAppropriateWiresToCut(wires.value, gizmos.value, otherGizmoData);
                         console.log(wiresToCut);
                         if (wiresToCut.length === 0) {
-                            // TODO: Fail
-                            console.log("Failed");
+                            didFail.value = true;
                             return;
                         }
                         const incorrectCuts = wires.value.filter((w) => w.isCut && !wiresToCut.includes(w.position));
                         if (incorrectCuts.length > 0) {
-                            // TODO: Fail
-                            console.log("Failed");
+                            didFail.value = true;
                             return;
                         }
                         const correctCuts = wires.value.filter((w) => w.isCut && wiresToCut.includes(w.position));
                         if (correctCuts.length === wiresToCut.length) {
-                            // TODO: win
-                            console.log("Win");
+                            didWin.value = true;
+                            setTimeout(() => {
+                                didWin.value = false;
+                                level.value++;
+                            }, 2000);
                         }
                     }
                 }}
@@ -481,6 +566,7 @@ const KeepTalkingWires = ({ level }: GizmoProps) => {
                             isHovering = true;
                         }
 
+                        context.shadowColor = "transparent";
                         if (isHovering) {
                             context.shadowBlur = 30;
                             context.shadowColor = "black";
@@ -488,8 +574,6 @@ const KeepTalkingWires = ({ level }: GizmoProps) => {
                             context.shadowOffsetY = 10;
                             hoveringOverWire = true;
                             hoveringWire.value = wire.position;
-                        } else {
-                            context.shadowColor = "transparent";
                         }
                         context.drawImage(canvas, 0, 0, canvas.width, canvas.height);
                     }
@@ -499,6 +583,29 @@ const KeepTalkingWires = ({ level }: GizmoProps) => {
                         canvasRef.current!.style.cursor = "unset";
                         hoveringWire.value = null;
                     }
+                    context.shadowColor = "transparent";
+
+                    context.beginPath();
+                    context.arc(canvas.width * 0.82, canvas.height * 0.18, canvas.width / 14, 0, 2 * Math.PI);
+                    context.closePath();
+                    context.fillStyle = "#8c91a5";
+                    context.fill();
+                    context.beginPath();
+                    context.arc(canvas.width * 0.82, canvas.height * 0.18, canvas.width / 20, 0, 2 * Math.PI);
+                    context.closePath();
+                    context.fillStyle = "black";
+                    if (didWin.value) {
+                        context.fillStyle = "green";
+                        context.shadowColor = "green";
+                        context.shadowOffsetX = 0;
+                        context.shadowOffsetY = 0;
+                    } else if (didFail.value) {
+                        context.fillStyle = "red";
+                        context.shadowColor = "red";
+                        context.shadowOffsetX = 0;
+                        context.shadowOffsetY = 0;
+                    }
+                    context.fill();
                 }}
             />
         </div>
@@ -512,4 +619,5 @@ export const Wires = ({ level }: GizmoProps) => {
     return <KeepTalkingWires level={level} />;
 };
 
+import { createContext } from "preact";
 import WiresHelp from "./WiresHelp.mdx";

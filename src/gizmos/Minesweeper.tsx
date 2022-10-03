@@ -4,6 +4,7 @@ import { HelpButton } from "~/components/HelpButton";
 import { GizmoProps } from "~/Game";
 import "./Minesweeper.css";
 import MinesweeperHelp from "./MinesweeperHelp.mdx";
+import { useWireOtherGizmoContext } from "./Wires";
 
 enum CellState {
     Hidden = "hidden",
@@ -301,6 +302,23 @@ export const Minesweeper = ({ level }: GizmoProps) => {
                 gameState.value = GameState.Pending;
             }, 2000);
         }
+    });
+
+    const wireOtherGizmo = useWireOtherGizmoContext();
+    useSignalEffect(() => {
+        let isMineInCorner = false;
+        let corners = [
+            [0, 0],
+            [0, gridSize - 1],
+            [gridSize - 1, 0],
+            [gridSize - 1, gridSize - 1],
+        ];
+        for (const [x, y] of corners) {
+            if (grid.value[x][y].value === CellState.Mine || grid.value[x][y].value === CellState.FlaggedMine) {
+                isMineInCorner = true;
+            }
+        }
+        wireOtherGizmo.minesweeperCorner = isMineInCorner;
     });
 
     return (

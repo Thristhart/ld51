@@ -5,10 +5,11 @@
     right: 0;
     border-radius: 50%;
     border: 1px solid black;
-    width: 2vmin;
-    height: 2vmin;
+    width: 4vmin;
+    height: 4vmin;
+    font-size: 2vmin;
     background: transparent;
     align-items: center;
     justify-content: center;
-    background-color: rgb(255,255,255, 0.4);
+    background-color: rgb(255, 255, 255, 0.4);
 }

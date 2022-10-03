@@ -2,6 +2,7 @@ import { Signal, useSignal, useSignalEffect } from "@preact/signals";
 import cn from "classnames";
 import { useEffect, useMemo } from "preact/hooks";
 import { GizmoProps } from "~/Game";
+import { useWireOtherGizmoContext } from "./Wires";
 import "./Wordle.css";
 import wordList from "./wordle_wordlist.json";
 
@@ -142,18 +143,22 @@ export const Wordle = ({ level }: GizmoProps) => {
         }
         if (hasEnded.value) {
             setTimeout(() => {
-                if(level.value <= 5){
+                if (level.value <= 5) {
                     let result = getRandomAnswer(level);
                     word.value = result.word;
                     guesses.value = [result.possibleMatches[Math.floor(Math.random() * result.possibleMatches.length)]];
                     guess.value = "";
                     hasEnded.value = false;
-                }
-                else{
+                } else {
                     //You Win!
                 }
             }, 2000);
         }
+    });
+
+    const wireOtherGizmo = useWireOtherGizmoContext();
+    useSignalEffect(() => {
+        wireOtherGizmo.wordleWord = word.value;
     });
 
     return (
